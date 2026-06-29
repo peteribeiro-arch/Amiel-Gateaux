@@ -104,7 +104,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="amielgateaux"
+                placeholder="Digite seu usuário"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-bento-dark placeholder-bento-dark/30 bg-[#FAF7F2]/40 transition-all text-sm font-medium"
               />
             </div>

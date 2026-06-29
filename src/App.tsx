@@ -44,6 +44,74 @@ export default function App() {
     });
   }, []);
 
+  // --- Hide Watermark/Username Elements (Especially in Admin Mode) ---
+  useEffect(() => {
+    const emailPattern = /peteribeiro/i;
+
+    const hideWatermarks = () => {
+      // 1. Hide generic watermark/email elements
+      const watermarkElements = document.querySelectorAll(
+        '[class*="watermark" i], [id*="watermark" i], [class*="email" i], [id*="email" i], .watermark, #watermark'
+      );
+      watermarkElements.forEach((el) => {
+        if (el instanceof HTMLElement) {
+          el.style.setProperty('display', 'none', 'important');
+          el.style.setProperty('opacity', '0', 'important');
+          el.style.setProperty('visibility', 'hidden', 'important');
+        }
+      });
+
+      // 2. Hide text-containing elements with username
+      const allElements = document.querySelectorAll('body *');
+      allElements.forEach((el) => {
+        if (!(el instanceof HTMLElement)) return;
+
+        // Skip root-like elements to avoid hiding the whole page
+        if (el.tagName === 'BODY' || el.tagName === 'HTML' || el.id === 'root') return;
+
+        // If it's a leaf node containing the pattern
+        if (el.children.length === 0 && el.textContent && emailPattern.test(el.textContent)) {
+          el.style.setProperty('display', 'none', 'important');
+          el.style.setProperty('opacity', '0', 'important');
+          el.style.setProperty('visibility', 'hidden', 'important');
+        } else if (el.children.length > 0) {
+          // Check direct text node children
+          for (let i = 0; i < el.childNodes.length; i++) {
+            const node = el.childNodes[i];
+            if (node.nodeType === Node.TEXT_NODE && node.nodeValue && emailPattern.test(node.nodeValue)) {
+              el.style.setProperty('display', 'none', 'important');
+              el.style.setProperty('opacity', '0', 'important');
+              el.style.setProperty('visibility', 'hidden', 'important');
+              break;
+            }
+          }
+        }
+      });
+    };
+
+    // Run immediately
+    hideWatermarks();
+
+    // Setup an observer to watch for DOM injections
+    const observer = new MutationObserver(() => {
+      hideWatermarks();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+
+    // Also set up a periodic interval just in case
+    const interval = setInterval(hideWatermarks, 500);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, [isAdminMode]);
+
   // --- Load Initial Data from localStorage / Supabase ---
   useEffect(() => {
     async function loadData() {

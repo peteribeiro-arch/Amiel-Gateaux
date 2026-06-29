@@ -34,3 +34,17 @@
   background: rgba(120, 110, 90, 0.4);
 }
 
+/* Hide any watermark or user-email watermark elements */
+[class*="watermark" i], 
+[id*="watermark" i], 
+[class*="email" i], 
+[id*="email" i],
+.watermark,
+#watermark {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+

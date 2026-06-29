@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  
+  --color-bento-bg: #FAF7F2;
+  --color-bento-dark: #3D2B1F;
+  --color-bento-border: #E5E0D8;
+  --color-bento-amber: #D97706;
+  --color-bento-amber-light: #FEF3C7;
+  --color-bento-amber-bright: #FDE68A;
+  --color-bento-amber-dark: #92400E;
+  --color-bento-amber-deep: #451A03;
+}
+
+/* Custom scrollbar for beautiful drawers/menus */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 110, 90, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 110, 90, 0.4);
+}
+

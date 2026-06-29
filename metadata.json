@@ -1,0 +1,6 @@
+{
+  "name": "Amiel Gâteaux",
+  "description": "Amiel Gâteaux - Confeitaria & Padaria Artesanal de Tortas Doces, Salgadas e Bolos Especiais sob Medida.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

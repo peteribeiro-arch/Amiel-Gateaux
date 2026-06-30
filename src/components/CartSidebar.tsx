@@ -22,7 +22,7 @@ export function CartSidebar({
   onClearCart,
 }: CartSidebarProps) {
   // Fixed seller phone number for Nepomuceno/MG
-  const whatsappNumber = '5535988658397';
+  const whatsappNumber = '5535999958397';
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('pickup');
@@ -467,7 +467,7 @@ export function CartSidebar({
                             setCustomerPhone(formatPhoneDisplay(e.target.value));
                             setError(null);
                           }}
-                          placeholder="Ex: (35) 98865-8397"
+                          placeholder="Ex: (35) 99995-8397"
                           className="w-full px-3 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40"
                         />
                       </div>

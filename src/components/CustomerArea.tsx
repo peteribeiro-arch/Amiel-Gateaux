@@ -281,7 +281,7 @@ export function CustomerArea({ isOpen, onClose }: CustomerAreaProps) {
                           type="tel"
                           value={phone}
                           onChange={handlePhoneChange}
-                          placeholder="Ex: (35) 98865-8397"
+                          placeholder="Ex: (35) 99995-8397"
                           className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-[#1C1917] placeholder-[#1C1917]/30 bg-white"
                         />
                       </div>
@@ -473,7 +473,7 @@ export function CustomerArea({ isOpen, onClose }: CustomerAreaProps) {
 
                               {/* Customer action button: talk about order */}
                               <a
-                                href={`https://api.whatsapp.com/send?phone=5535988658397&text=${encodeURIComponent(
+                                href={`https://api.whatsapp.com/send?phone=5535999958397&text=${encodeURIComponent(
                                   `Olá! Gostaria de falar sobre o meu Pedido #${parsed.number} de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.total)} feito por ${order.customerName}. Como está o andamento?`
                                 )}`}
                                 target="_blank"

@@ -478,7 +478,7 @@ export default function App() {
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8">
         
         {activeCategory === 'aniversario' ? (
-          <BirthdayCakeConfigurator onAddToCart={handleAddToCart} />
+          <BirthdayCakeConfigurator onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />
         ) : (
           <>
             {/* Banner Informative / Storefront Hero (Premium Large Bento Cell) */}

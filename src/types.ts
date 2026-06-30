@@ -1,4 +1,4 @@
-export type Category = 'doces' | 'salgadas' | 'bolos' | 'aniversario';
+export type Category = 'doces' | 'salgadas' | 'bolos' | 'aniversario' | 'potes';
 
 export interface ProductSize {
   id: string;

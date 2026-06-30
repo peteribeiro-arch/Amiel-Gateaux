@@ -862,6 +862,7 @@ export default function App() {
                     { id: 'salgadas', label: '🥧 Tortas Salgadas' },
                     { id: 'bolos', label: '🎂 Bolos Especiais' },
                     { id: 'aniversario', label: '🎈 Bolos de Aniversário' },
+                    { id: 'potes', label: '🫙 Delícias no Pote' },
                   ].map((cat) => {
                     const isHidden = hiddenCategories.includes(cat.id as Category);
                     return (
@@ -925,7 +926,9 @@ export default function App() {
                 ? 'Tortas Doces Deliciosas'
                 : activeCategory === 'salgadas'
                 ? 'Tortas Salgadas Gourmet'
-                : 'Bolos de Festa & Fofinhos'}
+                : activeCategory === 'bolos'
+                ? 'Bolos de Festa & Fofinhos'
+                : 'Delícias no Pote'}
             </h3>
             <p className="text-xs text-bento-dark/50 font-semibold mt-0.5 uppercase tracking-wide">
               Exibindo {filteredProducts.length} {filteredProducts.length === 1 ? 'produto' : 'produtos'} de acordo com seus filtros.

@@ -498,9 +498,7 @@ export function CartSidebar({
                           placeholder="Ex: 5535988658397"
                           className="w-full px-3 py-2 rounded-xl border border-[#FDE68A]/70 focus:outline-none focus:ring-2 focus:ring-bento-amber/20 text-xs text-bento-dark bg-white"
                         />
-                        <p className="text-[9px] text-bento-amber-dark/60 font-medium">
-                          Configure o número de teste acima com DDI (55) + DDD + número. O padrão já abre uma mensagem!
-                        </p>
+
                       </div>
                     </div>
                   </>

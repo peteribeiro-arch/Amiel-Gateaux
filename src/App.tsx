@@ -135,8 +135,21 @@ export default function App() {
         if (dbProducts !== null) {
           loadedFromDb = true;
           if (dbProducts.length > 0) {
-            setProducts(dbProducts);
-            localStorage.setItem('bella_massa_products', JSON.stringify(dbProducts));
+            const updatedDb = dbProducts.map((p) => {
+              const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
+              if (defaultProduct) {
+                return {
+                  ...p,
+                  imageUrl: defaultProduct.imageUrl,
+                  description: defaultProduct.description,
+                  ingredients: defaultProduct.ingredients,
+                  sizes: defaultProduct.sizes,
+                };
+              }
+              return p;
+            });
+            setProducts(updatedDb);
+            localStorage.setItem('bella_massa_products', JSON.stringify(updatedDb));
           } else {
             // If connected but empty, seed defaults
             console.log('🌱 Banco de dados Supabase vazio. Semeando produtos iniciais...');

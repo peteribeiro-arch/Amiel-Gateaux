@@ -21,7 +21,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'doces',
     price: 98.00,
     ingredients: ['Morangos Frescos', 'Creme de Baunilha Real', 'Geleia de Brilho', 'Massa Podre Doce'],
-    imageUrl: 'https://images.unsplash.com/photo-1464305795204-6f5bdf7aff7d?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/src/assets/images/strawberry_tart_1782777704003.jpg',
     description: 'Massa crocante preenchida com creme de confeiteiro artesanal e decorada com morangos frescos selecionados.',
     sizes: [
       { id: 'size-2-p', name: 'Individual (Fatia)', price: 20.00 },

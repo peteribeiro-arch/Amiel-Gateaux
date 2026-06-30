@@ -12,6 +12,7 @@ interface NavbarProps {
   cartCount: number;
   onOpenCart: () => void;
   onOpenCustomerArea: () => void;
+  onOpenManagerDashboard: () => void;
   hiddenCategories?: Category[];
 }
 
@@ -56,6 +57,7 @@ export function Navbar({
   cartCount,
   onOpenCart,
   onOpenCustomerArea,
+  onOpenManagerDashboard,
   hiddenCategories = [],
 }: NavbarProps) {
   return (
@@ -112,6 +114,19 @@ export function Navbar({
                 {isAdminMode ? 'Gerente' : 'Visitar'}
               </span>
             </button>
+
+            {/* Manager Orders Dashboard Button (Visible only to authenticated manager) */}
+            {isAdminMode && (
+              <button
+                id="open-manager-dashboard-btn"
+                onClick={onOpenManagerDashboard}
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-stone-900 text-bento-amber hover:bg-stone-800 border border-stone-800 shadow-sm"
+                title="Visualizar encomendas recebidas"
+              >
+                <ShoppingBag className="w-3.5 h-3.5 text-bento-amber-bright animate-pulse" />
+                <span>Painel de Pedidos</span>
+              </button>
+            )}
 
             {/* Meus Pedidos Customer Area Button */}
             <button

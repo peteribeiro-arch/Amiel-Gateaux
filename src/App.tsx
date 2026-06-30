@@ -23,6 +23,7 @@ import {
   dbUpdateOrderStatus
 } from './lib/supabase';
 import { CustomerArea } from './components/CustomerArea';
+import { ManagerDashboard } from './components/ManagerDashboard';
 
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isCustomerAreaOpen, setIsCustomerAreaOpen] = useState(false);
+  const [isManagerDashboardOpen, setIsManagerDashboardOpen] = useState(false);
   const [adminOrders, setAdminOrders] = useState<any[]>([]);
   const [isLoadingAdminOrders, setIsLoadingAdminOrders] = useState(false);
   const [showAdminOrdersPanel, setShowAdminOrdersPanel] = useState(false);
@@ -584,6 +586,7 @@ export default function App() {
         cartCount={cartCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenCustomerArea={() => setIsCustomerAreaOpen(true)}
+        onOpenManagerDashboard={() => setIsManagerDashboardOpen(true)}
         hiddenCategories={hiddenCategories}
       />
 
@@ -1031,6 +1034,13 @@ export default function App() {
         onClose={() => setIsCustomerAreaOpen(false)}
       />
 
+      {/* Manager Orders Dashboard */}
+      <ManagerDashboard
+        isOpen={isManagerDashboardOpen}
+        onClose={() => setIsManagerDashboardOpen(false)}
+        isAdminMode={isAdminMode}
+      />
+
       {/* Product Add/Edit Modal */}
       <ProductFormModal
         isOpen={isFormModalOpen}
@@ -1056,7 +1066,10 @@ export default function App() {
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={() => setIsAdminMode(true)}
+        onLoginSuccess={() => {
+          setIsAdminMode(true);
+          setIsManagerDashboardOpen(true);
+        }}
       />
 
     </div>

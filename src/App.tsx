@@ -747,6 +747,7 @@ export default function App() {
               <div>
                 <h4 className="text-white font-serif font-bold text-lg">Amiel Gâteaux - Confeitaria & Padaria Artesanal</h4>
                 <p className="text-xs text-stone-500 mt-1">Sua mesa muito mais doce e repleta de carinho artesanal.</p>
+                <p className="text-[11px] text-stone-500 mt-1.5 font-sans">📍 Rua Capitão Francisco Lima, 814, Centro - Nepomuceno/MG</p>
               </div>
             </div>
             
@@ -765,7 +766,7 @@ export default function App() {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 gap-4">
-            <p>© {new Date().getFullYear()} Amiel Gâteaux. Todos os direitos reservados. Feito com muito amor em São Paulo.</p>
+            <p>© {new Date().getFullYear()} Amiel Gâteaux. Todos os direitos reservados. Feito com muito amor em Nepomuceno/MG.</p>
             <p className="font-mono bg-stone-950 px-2 py-0.5 rounded border border-stone-800 text-[10px]">
               Vendas via WhatsApp • 100% Responsivo
             </p>

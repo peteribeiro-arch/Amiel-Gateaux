@@ -40,8 +40,8 @@ const CATEGORIES_LIST: { id: Category; label: string; icon: string; activeStyle:
     id: 'aniversario',
     label: 'Bolos de Aniversário',
     icon: '🎈',
-    activeStyle: 'bg-[#E056FD] text-white shadow-xs',
-    inactiveStyle: 'bg-[#FAF0FF] text-[#C23616] hover:bg-[#F2DDFE] border border-[#F2DDFE]/80'
+    activeStyle: 'bg-bento-amber text-white',
+    inactiveStyle: 'bg-white text-bento-dark/70 hover:bg-stone-50 border border-bento-border'
   }
 ];
 

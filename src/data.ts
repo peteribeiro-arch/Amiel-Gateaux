@@ -7,7 +7,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'doces',
     price: 89.90,
     ingredients: ['Limão Siciliano', 'Leite Condensado', 'Merengue Italiano', 'Massa de Biscoito Amanteigado'],
-    imageUrl: '/src/assets/images/lemon_meringue_tart_1782777880427.jpg',
+    imageUrl: '/assets/images/lemon_meringue_tart_1782777880427.jpg',
     description: 'Nossa famosa torta com creme cítrico aveludado de limão siciliano, coberta com um merengue dourado impecável.',
     sizes: [
       { id: 'size-1-p', name: 'Individual (Fatia)', price: 18.00 },
@@ -21,7 +21,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'doces',
     price: 98.00,
     ingredients: ['Morangos Frescos', 'Creme de Baunilha Real', 'Geleia de Brilho', 'Massa Podre Doce'],
-    imageUrl: '/src/assets/images/strawberry_tart_1782777704003.jpg',
+    imageUrl: '/assets/images/strawberry_tart_1782777704003.jpg',
     description: 'Massa crocante preenchida com creme de confeiteiro artesanal e decorada com morangos frescos selecionados.',
     sizes: [
       { id: 'size-2-p', name: 'Individual (Fatia)', price: 20.00 },
@@ -35,7 +35,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'doces',
     price: 92.50,
     ingredients: ['Banana Nanica', 'Doce de Leite Caseiro', 'Chantilly Leve', 'Toque de Canela', 'Massa de Chocolate'],
-    imageUrl: '/src/assets/images/banoffee_pie_1782777894833.jpg',
+    imageUrl: '/assets/images/banoffee_pie_1782777894833.jpg',
     description: 'Camadas generosas do melhor doce de leite, bananas frescas fatiadas e chantilly fresco salpicado com canela.',
     sizes: [
       { id: 'size-3-p', name: 'Individual (Fatia)', price: 19.00 },
@@ -49,7 +49,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgadas',
     price: 79.90,
     ingredients: ['Alho-poró Caramelizado', 'Queijo Gruyère', 'Creme de Leite Fresco', 'Massa Brisée Crocante'],
-    imageUrl: '/src/assets/images/leek_quiche_1782777903648.jpg',
+    imageUrl: '/assets/images/leek_quiche_1782777903648.jpg',
     description: 'Quiche clássica francesa com alho-poró suave e creme rico que derrete na boca.',
     sizes: [
       { id: 'size-4-p', name: 'Individual (Mini)', price: 16.00 },
@@ -63,7 +63,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgadas',
     price: 85.00,
     ingredients: ['Peito de Frango Desfiado', 'Catupiry Autêntico', 'Azeitonas Verdes', 'Massa Podre Amanteigada'],
-    imageUrl: '/src/assets/images/chicken_pie_1782777913401.jpg',
+    imageUrl: '/assets/images/chicken_pie_1782777913401.jpg',
     description: 'O verdadeiro empadão brasileiro com massa super amanteigada que desmancha na boca e recheio ultra cremoso.',
     sizes: [
       { id: 'size-5-p', name: 'Individual (Mini)', price: 17.50 },
@@ -77,7 +77,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgadas',
     price: 88.00,
     ingredients: ['Palmito Pupunha', 'Ervilhas Frescas', 'Molho Bechamel', 'Queijo Parmesão Gratinado'],
-    imageUrl: '/src/assets/images/heart_of_palm_pie_1782777921635.jpg',
+    imageUrl: '/assets/images/heart_of_palm_pie_1782777921635.jpg',
     description: 'Uma torta vegetariana sofisticada, recheada com palmito macio e molho branco temperado com ervas finas.',
     sizes: [
       { id: 'size-6-p', name: 'Individual (Mini)', price: 18.00 },
@@ -91,7 +91,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'bolos',
     price: 120.00,
     ingredients: ['Massa Red Velvet', 'Frosting de Cream Cheese', 'Toque de Limão', 'Frutas Vermelhas Decorativas'],
-    imageUrl: '/src/assets/images/red_velvet_cake_1782777930122.jpg',
+    imageUrl: '/assets/images/red_velvet_cake_1782777930122.jpg',
     description: 'Bolo elegante com massa de cacau aveludada de cor vermelha intensa, recheado e coberto com creme suave de cream cheese.',
     sizes: [
       { id: 'size-7-p', name: 'Pequeno (1kg)', price: 75.00 },
@@ -105,7 +105,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'bolos',
     price: 65.00,
     ingredients: ['Cenouras Orgânicas', 'Chocolate Belga 50%', 'Massa Fofinha', 'Granulado Gourmet'],
-    imageUrl: '/src/assets/images/carrot_volcano_cake_1782777939819.jpg',
+    imageUrl: '/assets/images/carrot_volcano_cake_1782777939819.jpg',
     description: 'Bolo de cenoura ultra fofinho com cobertura super cremosa e brilhante de chocolate belga meio amargo.',
     sizes: [
       { id: 'size-8-p', name: 'Pequeno (1kg)', price: 45.00 },
@@ -119,7 +119,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'bolos',
     price: 115.00,
     ingredients: ['Chocolate Callebaut 70%', 'Creme de Trufa', 'Massa Black', 'Raspas de Chocolate'],
-    imageUrl: '/src/assets/images/chocolate_truffle_cake_1782777950230.jpg',
+    imageUrl: '/assets/images/chocolate_truffle_cake_1782777950230.jpg',
     description: 'Para os amantes de chocolate de verdade: massa úmida escura e recheio cremoso trufado de cacau nobre.',
     sizes: [
       { id: 'size-9-p', name: 'Pequeno (1kg)', price: 70.00 },

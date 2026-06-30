@@ -116,7 +116,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
       category: 'aniversario',
       price: selectedSize.price,
       ingredients: [],
-      imageUrl: '/src/assets/images/birthday_cake_1782778653144.jpg',
+      imageUrl: '/assets/images/birthday_cake_1782778653144.jpg',
       description: `Bolo personalizado montado com massa ${selectedMassa}, recheio: ${selectedRecheios.join(' e ')} e cobertura: ${selectedCobertura}.`,
     };
 
@@ -185,7 +185,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
         {/* Quick promotional visual graphic */}
         <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 hidden md:block z-10">
           <img
-            src="/src/assets/images/birthday_cake_1782778653144.jpg"
+            src="/assets/images/birthday_cake_1782778653144.jpg"
             alt="Bolo de Aniversário"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover rounded-[24px] shadow-2xl rotate-3 border-4 border-white/10"

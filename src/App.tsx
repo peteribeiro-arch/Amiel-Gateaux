@@ -511,7 +511,7 @@ export default function App() {
           {/* Quick promotional visual graphic */}
           <div className="relative w-40 h-40 sm:w-48 sm:h-48 flex-shrink-0 hidden md:block z-10">
             <img
-              src="/src/assets/images/lemon_meringue_tart_1782777880427.jpg"
+              src="/assets/images/lemon_meringue_tart_1782777880427.jpg"
               alt="Promo"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover rounded-[24px] shadow-2xl rotate-3 border-4 border-white/10"

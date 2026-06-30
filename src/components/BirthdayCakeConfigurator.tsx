@@ -71,11 +71,11 @@ const COBERTURAS = [
 
 export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfiguratorProps) {
   // Config state
-  const [selectedSize, setSelectedSize] = useState(SIZES[1]); // Default to 15-20cm (R$100)
-  const [selectedMassa, setSelectedMassa] = useState(MASSAS[0].name);
+  const [selectedSize, setSelectedSize] = useState<typeof SIZES[0] | null>(null); // None selected by default
+  const [selectedMassa, setSelectedMassa] = useState<string | null>(null); // None selected by default
   const [selectedRecheios, setSelectedRecheios] = useState<string[]>([]);
   const [selectedAdicionais, setSelectedAdicionais] = useState<string[]>([]);
-  const [selectedCobertura, setSelectedCobertura] = useState(COBERTURAS[0].name);
+  const [selectedCobertura, setSelectedCobertura] = useState<string | null>(null); // None selected by default
   const [cakeText, setCakeText] = useState('');
   const [successAnimation, setSuccessAnimation] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -104,8 +104,20 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
 
   const handleAddToCartClick = () => {
     setError(null);
+    if (!selectedSize) {
+      setError('Por favor, selecione o tamanho do bolo.');
+      return;
+    }
+    if (!selectedMassa) {
+      setError('Por favor, selecione o tipo de massa.');
+      return;
+    }
     if (selectedRecheios.length === 0) {
       setError('Por favor, selecione pelo menos 1 sabor de recheio para o seu bolo.');
+      return;
+    }
+    if (!selectedCobertura) {
+      setError('Por favor, selecione uma cobertura para o seu bolo.');
       return;
     }
 
@@ -216,7 +228,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
 
             <div className="space-y-3">
               {SIZES.map((size) => {
-                const isSelected = selectedSize.id === size.id;
+                const isSelected = selectedSize?.id === size.id;
                 return (
                   <button
                     key={size.id}
@@ -473,10 +485,10 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
               <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-bento-border/40 text-center space-y-2">
                 <div className="text-4xl animate-bounce duration-1000">🎂</div>
                 <h4 className="text-xs font-black text-bento-dark uppercase tracking-wider font-serif">
-                  {selectedSize.name} Personalizado
+                  {selectedSize ? `${selectedSize.name} Personalizado` : 'Bolo Personalizado'}
                 </h4>
                 <p className="text-[10px] text-stone-400 font-bold leading-none">
-                  Massa: {selectedMassa}
+                  Massa: {selectedMassa || 'Pendente...'}
                 </p>
                 {selectedRecheios.length > 0 && (
                   <p className="text-[10px] text-stone-500 font-semibold leading-relaxed">
@@ -484,7 +496,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                   </p>
                 )}
                 <p className="text-[10px] text-stone-500 font-semibold">
-                  Cobertura: <span className="font-bold text-bento-amber-dark">{selectedCobertura}</span>
+                  Cobertura: <span className="font-bold text-bento-amber-dark">{selectedCobertura || 'Pendente...'}</span>
                 </p>
                 {cakeText.trim() !== '' && (
                   <div className="mt-2 bg-white px-2 py-1 rounded-lg border border-pink-100 border-dashed inline-block">
@@ -498,11 +510,11 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
               <div className="space-y-2.5 text-xs text-bento-dark pt-1">
                 <div className="flex justify-between border-b border-bento-border/40 pb-1.5">
                   <span className="font-semibold text-stone-500">Tamanho selecionado</span>
-                  <span className="font-extrabold text-right">{selectedSize.name}</span>
+                  <span className="font-extrabold text-right">{selectedSize ? selectedSize.name : 'Pendente...'}</span>
                 </div>
                 <div className="flex justify-between border-b border-bento-border/40 pb-1.5">
                   <span className="font-semibold text-stone-500">Tipo de massa</span>
-                  <span className="font-extrabold text-right">{selectedMassa}</span>
+                  <span className="font-extrabold text-right">{selectedMassa || 'Pendente...'}</span>
                 </div>
                 <div className="flex justify-between border-b border-bento-border/40 pb-1.5">
                   <span className="font-semibold text-stone-500">Sabores de recheio</span>
@@ -512,7 +524,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 </div>
                 <div className="flex justify-between border-b border-bento-border/40 pb-1.5">
                   <span className="font-semibold text-stone-500">Cobertura/Icing</span>
-                  <span className="font-extrabold text-right">{selectedCobertura}</span>
+                  <span className="font-extrabold text-right">{selectedCobertura || 'Pendente...'}</span>
                 </div>
                 {selectedAdicionais.length > 0 && (
                   <div className="flex justify-between border-b border-bento-border/40 pb-1.5">
@@ -555,7 +567,10 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
               <div className="pt-2 border-t border-bento-border flex justify-between items-center">
                 <span className="text-xs font-black uppercase tracking-wider text-bento-dark/50">Preço Estimado</span>
                 <span className="text-2xl font-black font-mono text-bento-dark">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedSize.price)}
+                  {selectedSize 
+                    ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedSize.price)
+                    : 'A partir de R$ 50,00'
+                  }
                 </span>
               </div>
 

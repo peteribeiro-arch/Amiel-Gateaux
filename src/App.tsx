@@ -112,6 +112,11 @@ export default function App() {
     };
   }, [isAdminMode]);
 
+  // --- Scroll to top on category change ---
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeCategory]);
+
   // --- Load Initial Data from localStorage / Supabase ---
   useEffect(() => {
     async function loadData() {

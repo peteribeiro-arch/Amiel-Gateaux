@@ -155,7 +155,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-4 px-2 sm:px-4">
+    <div className="w-full">
       {/* Decorative Title Card styled like the main banner */}
       <div className="relative rounded-[32px] overflow-hidden bg-bento-dark text-white p-8 sm:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-bento-border/10 mb-8">
         <div className="space-y-4 max-w-xl text-center md:text-left relative z-10">

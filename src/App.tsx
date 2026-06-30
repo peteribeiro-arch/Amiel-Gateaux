@@ -209,23 +209,39 @@ export default function App() {
         if (savedProducts) {
           try {
             const parsed = JSON.parse(savedProducts) as Product[];
-            const updated = parsed.map((p) => {
-              const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id);
+            const updated: Product[] = [];
+            
+            // Map existing products to their new counterparts
+            for (const p of parsed) {
+              const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
               if (defaultProduct) {
-                return {
+                updated.push({
                   ...p,
                   imageUrl: defaultProduct.imageUrl,
                   description: defaultProduct.description,
                   ingredients: defaultProduct.ingredients,
                   sizes: defaultProduct.sizes,
-                };
+                });
+              } else {
+                updated.push(p);
               }
-              return p;
-            });
+            }
+
+            // Append any new default products that are missing from the list
+            const existingKeys = new Set(parsed.map(p => p.id));
+            const existingNames = new Set(parsed.map(p => p.name.toLowerCase()));
+            
+            for (const dp of DEFAULT_PRODUCTS) {
+              if (!existingKeys.has(dp.id) && !existingNames.has(dp.name.toLowerCase())) {
+                updated.push(dp);
+              }
+            }
+
             setProducts(updated);
             localStorage.setItem('bella_massa_products', JSON.stringify(updated));
           } catch (e) {
             setProducts(DEFAULT_PRODUCTS);
+            localStorage.setItem('bella_massa_products', JSON.stringify(DEFAULT_PRODUCTS));
           }
         } else {
           setProducts(DEFAULT_PRODUCTS);
@@ -495,7 +511,7 @@ export default function App() {
           {/* Quick promotional visual graphic */}
           <div className="relative w-40 h-40 sm:w-48 sm:h-48 flex-shrink-0 hidden md:block z-10">
             <img
-              src="https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=300&q=80"
+              src="/src/assets/images/lemon_meringue_tart_1782777880427.jpg"
               alt="Promo"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover rounded-[24px] shadow-2xl rotate-3 border-4 border-white/10"

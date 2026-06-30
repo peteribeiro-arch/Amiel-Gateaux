@@ -483,23 +483,7 @@ export function CartSidebar({
                         </div>
                       </div>
 
-                      {/* Configurable Seller WhatsApp (Brazil Phone format) */}
-                      <div className="bg-[#FEF3C7]/20 p-4 rounded-2xl border border-[#FDE68A]/40 space-y-2 mt-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-[10px] font-bold text-bento-amber-dark uppercase flex items-center gap-1">
-                            <Phone className="w-3.5 h-3.5 text-bento-amber" /> WhatsApp da Confeitaria
-                          </label>
-                          <span className="text-[9px] text-bento-amber-dark font-bold bg-bento-amber-bright/50 px-2 py-0.5 rounded">Vendedor</span>
-                        </div>
-                        <input
-                          type="text"
-                          value={whatsappNumber}
-                          onChange={(e) => handleSavePhone(e.target.value)}
-                          placeholder="Ex: 5535988658397"
-                          className="w-full px-3 py-2 rounded-xl border border-[#FDE68A]/70 focus:outline-none focus:ring-2 focus:ring-bento-amber/20 text-xs text-bento-dark bg-white"
-                        />
 
-                      </div>
                     </div>
                   </>
                 )}

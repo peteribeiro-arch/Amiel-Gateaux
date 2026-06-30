@@ -22,7 +22,7 @@ export function CartSidebar({
   onClearCart,
 }: CartSidebarProps) {
   // Configurable seller phone number for Brazil
-  const [whatsappNumber, setWhatsappNumber] = useState('5511999999999');
+  const [whatsappNumber, setWhatsappNumber] = useState('5535988658397');
   const [customerName, setCustomerName] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('pickup');
   const [address, setAddress] = useState('');
@@ -31,8 +31,11 @@ export function CartSidebar({
   // Read saved phone number
   useEffect(() => {
     const savedPhone = localStorage.getItem('bakery_whatsapp_number');
-    if (savedPhone) {
+    if (savedPhone && savedPhone !== '5511999999999') {
       setWhatsappNumber(savedPhone);
+    } else {
+      setWhatsappNumber('5535988658397');
+      localStorage.setItem('bakery_whatsapp_number', '5535988658397');
     }
     const savedCustomer = localStorage.getItem('bakery_customer_name');
     if (savedCustomer) {
@@ -401,7 +404,7 @@ export function CartSidebar({
                           type="text"
                           value={whatsappNumber}
                           onChange={(e) => handleSavePhone(e.target.value)}
-                          placeholder="Ex: 5511999999999"
+                          placeholder="Ex: 5535988658397"
                           className="w-full px-3 py-2 rounded-xl border border-[#FDE68A]/70 focus:outline-none focus:ring-2 focus:ring-bento-amber/20 text-xs text-bento-dark bg-white"
                         />
                         <p className="text-[9px] text-bento-amber-dark/60 font-medium">

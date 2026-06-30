@@ -24,6 +24,89 @@ export function ProductFormModal({
   const [ingredientInput, setIngredientInput] = useState('');
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [sizes, setSizes] = useState<Array<{ id: string; name: string; price: string }>>([]);
+  const [isSearchingImage, setIsSearchingImage] = useState(false);
+
+  const handleAutoSearchImage = async (searchName: string = name) => {
+    const query = searchName.trim();
+    if (!query) return;
+
+    setIsSearchingImage(true);
+
+    const translations: Record<string, string> = {
+      'pão de queijo': 'cheese bread',
+      'pão': 'bread',
+      'bolo': 'cake',
+      'torta': 'pie tart',
+      'doce': 'sweets dessert',
+      'salgado': 'savory pastry',
+      'croissant': 'croissant',
+      'café': 'coffee',
+      'suco': 'juice',
+      'brigadeiro': 'chocolate truffle',
+      'confeitaria': 'bakery pastry',
+      'padaria': 'bakery',
+      'sonho': 'doughnut',
+      'broa': 'cornbread',
+      'pudim': 'pudding',
+      'empada': 'savory pie',
+      'esfiha': 'esfiha flatbread',
+      'coxinha': 'coxinha chicken croquette',
+      'cookie': 'cookie',
+      'beijinho': 'coconut candy',
+      'brownie': 'chocolate brownie',
+      'pão de mel': 'honey gingerbread cake',
+      'cupcake': 'cupcake',
+      'quindim': 'coconut custard dessert',
+      'limão': 'lemon',
+      'morango': 'strawberry',
+      'chocolate': 'chocolate',
+      'maracujá': 'passion fruit',
+      'nozes': 'walnuts',
+      'coco': 'coconut',
+      'milho': 'corn',
+      'fubá': 'cornmeal',
+      'queijo': 'cheese',
+      'calabresa': 'pepperoni sausage',
+      'presunto': 'ham',
+      'frango': 'chicken'
+    };
+
+    const lowerQuery = query.toLowerCase();
+    let searchTerms = query;
+
+    for (const [pt, en] of Object.entries(translations)) {
+      if (lowerQuery.includes(pt)) {
+        searchTerms = `${en} bakery`;
+        break;
+      }
+    }
+
+    try {
+      const targetUrl = `https://unsplash.com/napi/search/photos?query=${encodeURIComponent(searchTerms)}&per_page=3`;
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+
+      const response = await fetch(proxyUrl);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.results && data.results.length > 0) {
+          const randomIndex = Math.floor(Math.random() * Math.min(data.results.length, 3));
+          const imgUrl = data.results[randomIndex].urls.regular;
+          if (imgUrl) {
+            const baseUrl = imgUrl.split('?')[0];
+            setImageUrl(`${baseUrl}?auto=format&fit=crop&w=600&q=80`);
+            setIsSearchingImage(false);
+            return;
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Erro ao buscar imagem via proxy Unsplash:', error);
+    }
+
+    const cleanTerms = searchTerms.replace(/\s+/g, ',');
+    setImageUrl(`https://loremflickr.com/600/400/${encodeURIComponent(cleanTerms)},bakery/all`);
+    setIsSearchingImage(false);
+  };
 
   // When editingProduct changes, populate state
   useEffect(() => {
@@ -184,6 +267,11 @@ export function ProductFormModal({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onBlur={() => {
+                  if (!imageUrl.trim() && name.trim()) {
+                    handleAutoSearchImage();
+                  }
+                }}
                 placeholder="Ex: Torta Holandesa Divina"
                 className="w-full px-4 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40 transition-all text-sm font-medium"
               />
@@ -369,9 +457,14 @@ export function ProductFormModal({
 
             {/* Image URL */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-bento-dark/60 mb-1.5">
-                Link da Imagem (URL)
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-bento-dark/60">
+                  Link da Imagem (URL)
+                </label>
+                <span className="text-[10px] text-[#D97706] font-bold flex items-center gap-1">
+                  ✨ Busca automática ativa
+                </span>
+              </div>
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <span className="absolute left-4 top-3 text-bento-dark/40">
@@ -385,6 +478,25 @@ export function ProductFormModal({
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40 transition-all text-sm font-medium"
                   />
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleAutoSearchImage()}
+                  disabled={isSearchingImage || !name.trim()}
+                  className="px-4 py-2.5 rounded-xl border border-[#FDE68A] bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#D97706] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                  title="Buscar foto correspondente ao nome na internet"
+                >
+                  {isSearchingImage ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-[#D97706] border-t-transparent rounded-full animate-spin" />
+                      Buscando...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
+                      Buscar Foto
+                    </>
+                  )}
+                </button>
               </div>
 
               {/* Preset images recommendation (instant clicks) */}

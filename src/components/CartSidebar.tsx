@@ -24,17 +24,32 @@ export function CartSidebar({
   // Fixed seller phone number for Nepomuceno/MG
   const whatsappNumber = '5535988658397';
   const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('pickup');
   const [address, setAddress] = useState('');
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'dinheiro' | 'debito' | 'credito' | ''>('');
+  const [sessionOrderNum, setSessionOrderNum] = useState('');
 
-  // Read saved customer name on mount
+  // Generate a fixed order number for the active checkout session
+  useEffect(() => {
+    if (isOpen && !sessionOrderNum) {
+      setSessionOrderNum(Math.floor(1000 + Math.random() * 9000).toString());
+    } else if (!isOpen) {
+      setSessionOrderNum(''); // reset for next checkout
+    }
+  }, [isOpen, sessionOrderNum]);
+
+  // Read saved customer details on mount
   useEffect(() => {
     const savedCustomer = localStorage.getItem('bakery_customer_name');
     if (savedCustomer) {
       setCustomerName(savedCustomer);
+    }
+    const savedPhone = localStorage.getItem('bakery_customer_phone');
+    if (savedPhone) {
+      setCustomerPhone(savedPhone);
     }
   }, []);
 
@@ -48,10 +63,24 @@ export function CartSidebar({
     currency: 'BRL',
   }).format(total);
 
+  const sanitizePhone = (value: string) => {
+    return value.replace(/\D/g, '');
+  };
+
+  const formatPhoneDisplay = (value: string) => {
+    const numbers = sanitizePhone(value);
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 6) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 10) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+  };
+
   // Generate beautiful message for WhatsApp
-  const generateMessageText = () => {
+  const generateMessageText = (orderNum: string) => {
     let msg = `Olá! Gostaria de fazer um pedido de tortas e bolos:\n\n`;
+    msg += `🔢 *Pedido número:* #${orderNum}\n`;
     msg += `👤 *Cliente:* ${customerName || 'Não informado'}\n`;
+    msg += `📞 *WhatsApp:* ${customerPhone || 'Não informado'}\n`;
     msg += `📍 *Método:* ${deliveryType === 'delivery' ? 'Entrega em domicílio' : 'Retirada no balcão'}\n`;
     
     if (deliveryType === 'delivery' && address.trim()) {
@@ -111,6 +140,11 @@ export function CartSidebar({
       setError('Por favor, informe o seu nome.');
       return;
     }
+    const sanitizedPhone = sanitizePhone(customerPhone);
+    if (sanitizedPhone.length < 10) {
+      setError('Por favor, informe um número de telefone com DDD válido.');
+      return;
+    }
     if (deliveryType === 'delivery' && !address.trim()) {
       setError('Por favor, informe o endereço de entrega.');
       return;
@@ -122,24 +156,31 @@ export function CartSidebar({
     
     // Save customer details
     localStorage.setItem('bakery_customer_name', customerName);
+    localStorage.setItem('bakery_customer_phone', customerPhone);
+
+    const orderNum = sessionOrderNum || Math.floor(1000 + Math.random() * 9000).toString();
+
+    const orderItems = cartItems.map((item) => ({
+      id: item.id,
+      product_name: item.product.name,
+      quantity: item.quantity,
+      selected_size: item.selectedSize || null,
+      observation: item.observation || '',
+      custom_cake_config: item.customCakeConfig || null,
+    }));
 
     // Save order details to Supabase if configured
+    let savedId = null;
     if (isSupabaseConfigured) {
       try {
-        await dbSubmitOrder({
+        savedId = await dbSubmitOrder({
+          orderNumber: orderNum,
           customerName: customerName,
-          customerPhone: whatsappNumber,
+          customerPhone: sanitizedPhone,
           deliveryMethod: deliveryType,
           address: deliveryType === 'delivery' ? { info: address } : null,
           paymentMethod: paymentMethod,
-          items: cartItems.map((item) => ({
-            id: item.id,
-            product_name: item.product.name,
-            quantity: item.quantity,
-            selected_size: item.selectedSize || null,
-            observation: item.observation || '',
-            custom_cake_config: item.customCakeConfig || null,
-          })),
+          items: orderItems,
           total: total,
           observation: 'Pedido via WhatsApp',
         });
@@ -148,10 +189,39 @@ export function CartSidebar({
       }
     }
 
-    const text = encodeURIComponent(generateMessageText());
+    // Also register order in local state/localStorage regardless of supabase configuration
+    try {
+      const localOrders = JSON.parse(localStorage.getItem('bella_massa_orders') || '[]');
+      const newLocalOrder = {
+        id: savedId || `local-${Date.now()}-${orderNum}`,
+        orderNumber: orderNum,
+        customerName: customerName,
+        customerPhone: sanitizedPhone,
+        deliveryMethod: deliveryType,
+        address: deliveryType === 'delivery' ? { info: address } : null,
+        paymentMethod: paymentMethod,
+        items: orderItems,
+        total: total,
+        observation: `[#${orderNum}] Pedido via WhatsApp`,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+      localOrders.push(newLocalOrder);
+      localStorage.setItem('bella_massa_orders', JSON.stringify(localOrders));
+    } catch (err) {
+      console.error('Erro ao registrar pedido localmente:', err);
+    }
+
+    const text = encodeURIComponent(generateMessageText(orderNum));
     // Format whatsapp api URL
     const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${text}`;
     window.open(url, '_blank');
+    
+    // Clear cart after checkout
+    setTimeout(() => {
+      onClearCart();
+      onClose();
+    }, 1000);
   };
 
   const handleCopyToClipboard = () => {
@@ -160,6 +230,11 @@ export function CartSidebar({
     setError(null);
     if (!customerName.trim()) {
       setError('Por favor, informe o seu nome.');
+      return;
+    }
+    const sanitizedPhone = sanitizePhone(customerPhone);
+    if (sanitizedPhone.length < 10) {
+      setError('Por favor, informe um número de telefone com DDD válido.');
       return;
     }
     if (deliveryType === 'delivery' && !address.trim()) {
@@ -171,10 +246,12 @@ export function CartSidebar({
       return;
     }
 
-    navigator.clipboard.writeText(generateMessageText());
+    const orderNum = sessionOrderNum || Math.floor(1000 + Math.random() * 9000).toString();
+    navigator.clipboard.writeText(generateMessageText(orderNum));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
 
   return (
     <AnimatePresence>
@@ -377,6 +454,24 @@ export function CartSidebar({
                           className="w-full px-3 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40"
                         />
                       </div>
+
+                      {/* Phone input */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">
+                          Seu WhatsApp / Telefone <span className="text-rose-500 font-extrabold">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          value={customerPhone}
+                          onChange={(e) => {
+                            setCustomerPhone(formatPhoneDisplay(e.target.value));
+                            setError(null);
+                          }}
+                          placeholder="Ex: (35) 98865-8397"
+                          className="w-full px-3 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40"
+                        />
+                      </div>
+
 
                       {/* Delivery selector */}
                       <div>

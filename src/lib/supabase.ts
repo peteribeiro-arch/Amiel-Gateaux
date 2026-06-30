@@ -228,6 +228,7 @@ export async function dbSaveHiddenCategories(categories: Category[]): Promise<bo
  * Submit order (Optional feature, logs orders to database)
  */
 export async function dbSubmitOrder(order: {
+  orderNumber: string;
   customerName: string;
   customerPhone: string;
   deliveryMethod: string;
@@ -240,6 +241,10 @@ export async function dbSubmitOrder(order: {
   if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return null;
 
   try {
+    // We prepend the [#orderNumber] tag to observation to keep it schema-safe 
+    // while also supporting database-driven storage
+    const formattedObservation = `[#${order.orderNumber}] ${order.observation || ''}`.trim();
+
     const { data, error } = await supabase
       .from('orders')
       .insert({
@@ -250,7 +255,7 @@ export async function dbSubmitOrder(order: {
         payment_method: order.paymentMethod,
         items: order.items,
         total: order.total,
-        observation: order.observation || ''
+        observation: formattedObservation
       })
       .select('id')
       .single();
@@ -269,3 +274,78 @@ export async function dbSubmitOrder(order: {
     return null;
   }
 }
+
+/**
+ * Fetch orders by customer phone number from Supabase
+ */
+export async function dbFetchOrdersByPhone(phone: string): Promise<any[] | null> {
+  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return null;
+
+  try {
+    const sanitizedPhone = phone.replace(/\D/g, '');
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('customer_phone', sanitizedPhone)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('Erro ao buscar pedidos do Supabase por telefone:', error);
+      return null;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.warn('Erro de conexão ao buscar pedidos por telefone:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all orders from Supabase (for Admin mode)
+ */
+export async function dbFetchAllOrders(): Promise<any[] | null> {
+  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('Erro ao buscar todos os pedidos do Supabase:', error);
+      return null;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.warn('Erro de conexão ao buscar todos os pedidos:', error);
+    return null;
+  }
+}
+
+/**
+ * Update order status in Supabase
+ */
+export async function dbUpdateOrderStatus(orderId: string, status: string): Promise<boolean> {
+  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return false;
+
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ status })
+      .eq('id', orderId);
+
+    if (error) {
+      console.warn('Erro ao atualizar status do pedido no Supabase:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.warn('Erro de conexão ao atualizar status do pedido:', error);
+    return false;
+  }
+}
+

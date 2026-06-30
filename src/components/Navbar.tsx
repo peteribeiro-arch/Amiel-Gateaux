@@ -11,6 +11,7 @@ interface NavbarProps {
   setIsAdminMode: (admin: boolean) => void;
   cartCount: number;
   onOpenCart: () => void;
+  onOpenCustomerArea: () => void;
   hiddenCategories?: Category[];
 }
 
@@ -54,6 +55,7 @@ export function Navbar({
   setIsAdminMode,
   cartCount,
   onOpenCart,
+  onOpenCustomerArea,
   hiddenCategories = [],
 }: NavbarProps) {
   return (
@@ -109,6 +111,18 @@ export function Navbar({
               <span className="inline sm:hidden">
                 {isAdminMode ? 'Gerente' : 'Visitar'}
               </span>
+            </button>
+
+            {/* Meus Pedidos Customer Area Button */}
+            <button
+              id="open-customer-area-btn"
+              onClick={onOpenCustomerArea}
+              className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer bg-white text-bento-dark hover:bg-stone-50 border border-bento-border"
+              title="Acompanhar meus pedidos"
+            >
+              <User className="w-3.5 h-3.5 text-bento-amber" />
+              <span className="hidden sm:inline">Meus Pedidos</span>
+              <span className="inline sm:hidden">Pedidos</span>
             </button>
 
             {/* Cart Button */}

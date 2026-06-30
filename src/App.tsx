@@ -18,8 +18,12 @@ import {
   dbDeleteProduct,
   dbFetchHiddenCategories,
   dbSaveHiddenCategories,
-  subscribeToSupabaseErrors
+  subscribeToSupabaseErrors,
+  dbFetchAllOrders,
+  dbUpdateOrderStatus
 } from './lib/supabase';
+import { CustomerArea } from './components/CustomerArea';
+
 
 export default function App() {
   // --- States ---
@@ -29,6 +33,10 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isCustomerAreaOpen, setIsCustomerAreaOpen] = useState(false);
+  const [adminOrders, setAdminOrders] = useState<any[]>([]);
+  const [isLoadingAdminOrders, setIsLoadingAdminOrders] = useState(false);
+  const [showAdminOrdersPanel, setShowAdminOrdersPanel] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -431,6 +439,110 @@ export default function App() {
     saveCartToStorage([]);
   };
 
+  const loadAdminOrders = async () => {
+    setIsLoadingAdminOrders(true);
+    try {
+      let dbOrders: any[] = [];
+      if (isSupabaseConfigured) {
+        const fetched = await dbFetchAllOrders();
+        if (fetched) {
+          dbOrders = fetched;
+        }
+      }
+
+      // Also get from LocalStorage
+      const localOrdersRaw = localStorage.getItem('bella_massa_orders') || '[]';
+      let localOrders: any[] = [];
+      try {
+        localOrders = JSON.parse(localOrdersRaw);
+      } catch (e) {
+        console.error(e);
+      }
+
+      // Merge and deduplicate
+      const mergedMap = new Map<string, any>();
+      dbOrders.forEach((o) => {
+        const idKey = o.id || o.orderNumber || '';
+        mergedMap.set(idKey, {
+          id: o.id,
+          customerName: o.customer_name,
+          customerPhone: o.customer_phone,
+          deliveryMethod: o.delivery_method,
+          address: o.address,
+          paymentMethod: o.payment_method,
+          items: o.items || [],
+          total: Number(o.total),
+          observation: o.observation,
+          status: o.status || 'pending',
+          createdAt: o.created_at,
+          source: 'database'
+        });
+      });
+
+      localOrders.forEach((o) => {
+        const idKey = o.id || o.orderNumber || '';
+        if (!mergedMap.has(idKey)) {
+          mergedMap.set(idKey, {
+            id: o.id,
+            customerName: o.customerName || o.customer_name,
+            customerPhone: o.customerPhone || o.customer_phone,
+            deliveryMethod: o.deliveryMethod || o.delivery_method,
+            address: o.address,
+            paymentMethod: o.paymentMethod || o.payment_method,
+            items: o.items || [],
+            total: Number(o.total),
+            observation: o.observation,
+            status: o.status || 'pending',
+            createdAt: o.createdAt || o.created_at,
+            orderNumber: o.orderNumber,
+            source: 'local'
+          });
+        }
+      });
+
+      const mergedList = Array.from(mergedMap.values());
+      mergedList.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setAdminOrders(mergedList);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingAdminOrders(false);
+    }
+  };
+
+  const handleUpdateStatus = async (orderId: string, status: any) => {
+    const order = adminOrders.find(o => o.id === orderId);
+    if (!order) return;
+
+    if (isSupabaseConfigured && order.source === 'database') {
+      await dbUpdateOrderStatus(orderId, status);
+    }
+
+    // Update LocalStorage
+    const localOrdersRaw = localStorage.getItem('bella_massa_orders') || '[]';
+    try {
+      const localOrders = JSON.parse(localOrdersRaw);
+      const updatedLocal = localOrders.map((o: any) => {
+        if (o.id === orderId || o.orderNumber === orderId || (order.orderNumber && o.orderNumber === order.orderNumber)) {
+          return { ...o, status };
+        }
+        return o;
+      });
+      localStorage.setItem('bella_massa_orders', JSON.stringify(updatedLocal));
+    } catch (e) {
+      console.error(e);
+    }
+
+    // Update state
+    setAdminOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  };
+
+  useEffect(() => {
+    if (isAdminMode) {
+      loadAdminOrders();
+    }
+  }, [isAdminMode]);
+
   const handleToggleAdminMode = () => {
     if (isAdminMode) {
       setIsAdminMode(false);
@@ -471,6 +583,7 @@ export default function App() {
         setIsAdminMode={handleToggleAdminMode}
         cartCount={cartCount}
         onOpenCart={() => setIsCartOpen(true)}
+        onOpenCustomerArea={() => setIsCustomerAreaOpen(true)}
         hiddenCategories={hiddenCategories}
       />
 
@@ -569,7 +682,24 @@ export default function App() {
                 </div>
 
                 {/* Manager buttons */}
-                <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+                <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0 flex-wrap justify-end">
+                  <button
+                    id="btn-toggle-admin-orders"
+                    onClick={() => {
+                      setShowAdminOrdersPanel(!showAdminOrdersPanel);
+                      if (!showAdminOrdersPanel) {
+                        loadAdminOrders();
+                      }
+                    }}
+                    className={`px-3.5 py-2 rounded-xl border transition-colors flex items-center gap-1.5 cursor-pointer text-xs font-bold ${
+                      showAdminOrdersPanel
+                        ? 'bg-bento-dark text-white border-bento-dark'
+                        : 'border-bento-amber/30 bg-white hover:bg-[#FEF3C7]/40 text-bento-amber-dark'
+                    }`}
+                  >
+                    📦 Ver Pedidos ({adminOrders.length})
+                  </button>
+
                   <button
                     id="btn-restore-defaults"
                     onClick={handleResetDefaults}
@@ -593,6 +723,127 @@ export default function App() {
                   </button>
                 </div>
               </div>
+
+              {/* Admin Orders Section */}
+              {showAdminOrdersPanel && (
+                <div className="border-t border-bento-amber/20 pt-4 mt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-bento-amber-dark flex items-center gap-1.5">
+                      📦 Registro de Encomendas Recebidas ({adminOrders.length})
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={loadAdminOrders}
+                      disabled={isLoadingAdminOrders}
+                      className="text-[10px] font-black uppercase text-bento-amber hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <RefreshCw className={`w-3 h-3 ${isLoadingAdminOrders ? 'animate-spin' : ''}`} />
+                      Sincronizar Pedidos
+                    </button>
+                  </div>
+
+                  {isLoadingAdminOrders ? (
+                    <div className="py-6 flex items-center justify-center gap-2 text-xs font-bold text-bento-amber-dark/60">
+                      <RefreshCw className="w-4 h-4 animate-spin text-bento-amber" />
+                      Buscando encomendas...
+                    </div>
+                  ) : adminOrders.length === 0 ? (
+                    <p className="text-[11px] text-[#78350F] font-medium bg-white/50 p-4 rounded-xl border border-amber-200 text-center">
+                      Nenhuma encomenda registrada ainda. Os novos pedidos feitos pelos clientes aparecerão aqui em tempo real!
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[450px] overflow-y-auto pr-1">
+                      {adminOrders.map((order) => {
+                        // Helper to extract order number from observation string
+                        const match = order.observation?.match(/\[#(\d+)\]/);
+                        const orderNum = order.orderNumber || (match ? match[1] : 'S/N');
+                        
+                        const dateFormatted = new Date(order.createdAt).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        });
+
+                        return (
+                          <div key={order.id} className="bg-white border border-[#E7E5E4] rounded-2xl p-4.5 space-y-3.5 shadow-xs">
+                            <div className="flex items-start justify-between border-b pb-2.5">
+                              <div>
+                                <h5 className="font-extrabold text-xs text-[#1C1917] font-serif">
+                                  Pedido #{orderNum} - {order.customerName}
+                                </h5>
+                                <div className="text-[9px] text-[#1C1917]/50 font-bold mt-0.5">
+                                  {dateFormatted} | <span className="uppercase text-bento-amber-dark font-mono text-[8px] bg-amber-50 px-1 rounded">{order.source}</span>
+                                </div>
+                              </div>
+
+                              <select
+                                value={order.status || 'pending'}
+                                onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
+                                className={`text-[10px] font-extrabold rounded-lg px-2 py-1 border cursor-pointer focus:outline-none ${
+                                  order.status === 'delivered'
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                    : order.status === 'preparing'
+                                    ? 'bg-blue-50 text-blue-800 border-blue-200'
+                                    : order.status === 'cancelled'
+                                    ? 'bg-rose-50 text-rose-800 border-rose-200'
+                                    : 'bg-amber-50 text-amber-800 border-amber-200'
+                                }`}
+                              >
+                                <option value="pending">⏳ Pendente</option>
+                                <option value="preparing">🍰 Preparando</option>
+                                <option value="delivered">✅ Entregue</option>
+                                <option value="cancelled">❌ Cancelado</option>
+                              </select>
+                            </div>
+
+                            {/* Contact & delivery */}
+                            <div className="grid grid-cols-2 gap-2 text-[10px] text-[#1C1917]/70 font-semibold">
+                              <div>
+                                <span className="text-[8px] font-black text-[#1C1917]/40 uppercase tracking-widest block mb-0.5">Contato Cliente</span>
+                                <a
+                                  href={`https://api.whatsapp.com/send?phone=55${order.customerPhone}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-emerald-600 hover:underline flex items-center gap-0.5"
+                                >
+                                  💬 {order.customerPhone}
+                                </a>
+                              </div>
+                              <div>
+                                <span className="text-[8px] font-black text-[#1C1917]/40 uppercase tracking-widest block mb-0.5">Forma Recebimento</span>
+                                <span className="truncate block text-[#1C1917]">
+                                  {order.deliveryMethod === 'delivery' ? `Entrega: ${order.address?.info || ''}` : 'Retirar no Balcão'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Items list */}
+                            <div>
+                              <span className="text-[8px] font-black text-[#1C1917]/40 uppercase tracking-widest block mb-1">Itens do Pedido</span>
+                              <div className="bg-[#FAF7F2] p-2.5 rounded-xl border text-[10px] space-y-1.5">
+                                {order.items.map((item: any, idx: number) => (
+                                  <div key={idx} className="flex justify-between font-bold text-stone-700">
+                                    <span>{item.quantity}x {item.product_name || item.product?.name}</span>
+                                    {item.selected_size && <span className="text-[9px] text-stone-500 font-sans">({item.selected_size.name})</span>}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between pt-2 border-t">
+                              <span className="text-[10px] font-bold text-[#1C1917]/50 uppercase">Forma Pagamento: <strong className="text-[#1C1917] uppercase">{order.paymentMethod || 'Pix'}</strong></span>
+                              <span className="text-xs font-black text-stone-900 font-mono">
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.total)}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Category Visibility Manager */}
               <div className="border-t border-bento-amber/20 pt-4 mt-4 space-y-3">
@@ -773,6 +1024,12 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Customer Area Panel */}
+      <CustomerArea
+        isOpen={isCustomerAreaOpen}
+        onClose={() => setIsCustomerAreaOpen(false)}
+      />
 
       {/* Product Add/Edit Modal */}
       <ProductFormModal

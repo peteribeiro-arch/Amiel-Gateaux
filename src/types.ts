@@ -40,3 +40,19 @@ export interface CartItem {
   observation?: string;
   customCakeConfig?: CustomCakeConfig;
 }
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  deliveryMethod: 'delivery' | 'pickup';
+  address: { info: string } | null;
+  paymentMethod: 'pix' | 'dinheiro' | 'debito' | 'credito' | '';
+  items: any[];
+  total: number;
+  observation?: string;
+  status: 'pending' | 'preparing' | 'delivered' | 'cancelled';
+  createdAt: string;
+}
+

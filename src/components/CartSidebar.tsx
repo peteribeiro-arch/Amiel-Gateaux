@@ -21,8 +21,8 @@ export function CartSidebar({
   onRemoveFromCart,
   onClearCart,
 }: CartSidebarProps) {
-  // Configurable seller phone number for Brazil
-  const [whatsappNumber, setWhatsappNumber] = useState('5535988658397');
+  // Fixed seller phone number for Nepomuceno/MG
+  const whatsappNumber = '5535988658397';
   const [customerName, setCustomerName] = useState('');
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('pickup');
   const [address, setAddress] = useState('');
@@ -30,26 +30,13 @@ export function CartSidebar({
   const [error, setError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'dinheiro' | 'debito' | 'credito' | ''>('');
 
-  // Read saved phone number
+  // Read saved customer name on mount
   useEffect(() => {
-    const savedPhone = localStorage.getItem('bakery_whatsapp_number');
-    if (savedPhone && savedPhone !== '5511999999999') {
-      setWhatsappNumber(savedPhone);
-    } else {
-      setWhatsappNumber('5535988658397');
-      localStorage.setItem('bakery_whatsapp_number', '5535988658397');
-    }
     const savedCustomer = localStorage.getItem('bakery_customer_name');
     if (savedCustomer) {
       setCustomerName(savedCustomer);
     }
   }, []);
-
-  const handleSavePhone = (num: string) => {
-    const cleanNum = num.replace(/\D/g, '');
-    setWhatsappNumber(cleanNum);
-    localStorage.setItem('bakery_whatsapp_number', cleanNum);
-  };
 
   const total = cartItems.reduce((acc, item) => {
     const itemPrice = item.selectedSize ? item.selectedSize.price : item.product.price;

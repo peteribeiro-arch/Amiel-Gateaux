@@ -27,6 +27,8 @@ export function CartSidebar({
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('pickup');
   const [address, setAddress] = useState('');
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'dinheiro' | 'debito' | 'credito' | ''>('');
 
   // Read saved phone number
   useEffect(() => {
@@ -68,6 +70,16 @@ export function CartSidebar({
     if (deliveryType === 'delivery' && address.trim()) {
       msg += `🏠 *Endereço:* ${address}\n`;
     }
+    
+    const paymentLabels: Record<string, string> = {
+      pix: 'Pix 📱',
+      dinheiro: 'Dinheiro 💵',
+      debito: 'Cartão de Débito 💳',
+      credito: 'Cartão de Crédito 💳',
+    };
+    const paymentLabel = paymentLabels[paymentMethod] || 'Não selecionado';
+    msg += `💳 *Pagamento:* ${paymentLabel}\n`;
+    
     msg += `\n🛒 *Itens do Pedido:*\n`;
 
     cartItems.forEach((item) => {
@@ -107,6 +119,20 @@ export function CartSidebar({
   const handleWhatsAppCheckout = async () => {
     if (cartItems.length === 0) return;
     
+    setError(null);
+    if (!customerName.trim()) {
+      setError('Por favor, informe o seu nome.');
+      return;
+    }
+    if (deliveryType === 'delivery' && !address.trim()) {
+      setError('Por favor, informe o endereço de entrega.');
+      return;
+    }
+    if (!paymentMethod) {
+      setError('Por favor, selecione a forma de pagamento.');
+      return;
+    }
+    
     // Save customer details
     localStorage.setItem('bakery_customer_name', customerName);
 
@@ -114,11 +140,11 @@ export function CartSidebar({
     if (isSupabaseConfigured) {
       try {
         await dbSubmitOrder({
-          customerName: customerName || 'Anônimo',
+          customerName: customerName,
           customerPhone: whatsappNumber,
           deliveryMethod: deliveryType,
           address: deliveryType === 'delivery' ? { info: address } : null,
-          paymentMethod: 'whatsapp',
+          paymentMethod: paymentMethod,
           items: cartItems.map((item) => ({
             id: item.id,
             product_name: item.product.name,
@@ -143,6 +169,21 @@ export function CartSidebar({
 
   const handleCopyToClipboard = () => {
     if (cartItems.length === 0) return;
+
+    setError(null);
+    if (!customerName.trim()) {
+      setError('Por favor, informe o seu nome.');
+      return;
+    }
+    if (deliveryType === 'delivery' && !address.trim()) {
+      setError('Por favor, informe o endereço de entrega.');
+      return;
+    }
+    if (!paymentMethod) {
+      setError('Por favor, selecione a forma de pagamento.');
+      return;
+    }
+
     navigator.clipboard.writeText(generateMessageText());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -335,11 +376,16 @@ export function CartSidebar({
                       
                       {/* Name input */}
                       <div>
-                        <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">Seu Nome</label>
+                        <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">
+                          Seu Nome <span className="text-rose-500 font-extrabold">*</span>
+                        </label>
                         <input
                           type="text"
                           value={customerName}
-                          onChange={(e) => setCustomerName(e.target.value)}
+                          onChange={(e) => {
+                            setCustomerName(e.target.value);
+                            setError(null);
+                          }}
                           placeholder="Informe seu nome"
                           className="w-full px-3 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40"
                         />
@@ -351,7 +397,10 @@ export function CartSidebar({
                         <div className="grid grid-cols-2 gap-2">
                           <button
                             type="button"
-                            onClick={() => setDeliveryType('pickup')}
+                            onClick={() => {
+                              setDeliveryType('pickup');
+                              setError(null);
+                            }}
                             className={`py-2 px-3 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer ${
                               deliveryType === 'pickup'
                                 ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
@@ -362,7 +411,10 @@ export function CartSidebar({
                           </button>
                           <button
                             type="button"
-                            onClick={() => setDeliveryType('delivery')}
+                            onClick={() => {
+                              setDeliveryType('delivery');
+                              setError(null);
+                            }}
                             className={`py-2 px-3 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer ${
                               deliveryType === 'delivery'
                                 ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
@@ -381,16 +433,55 @@ export function CartSidebar({
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
                         >
-                          <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">Endereço de Entrega</label>
+                          <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">
+                            Endereço de Entrega <span className="text-rose-500 font-extrabold">*</span>
+                          </label>
                           <input
                             type="text"
                             value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            onChange={(e) => {
+                              setAddress(e.target.value);
+                              setError(null);
+                            }}
                             placeholder="Rua, número, bairro e referência"
                             className="w-full px-3 py-2.5 rounded-xl border border-bento-border focus:outline-none focus:ring-2 focus:ring-bento-amber/10 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/40 bg-[#FAF7F2]/40"
                           />
                         </motion.div>
                       )}
+
+                      {/* Forma de Pagamento */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-bento-dark/60 uppercase mb-1">
+                          Forma de Pagamento <span className="text-rose-500 font-extrabold">*</span>
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { id: 'pix', label: '📱 Pix' },
+                            { id: 'dinheiro', label: '💵 Dinheiro' },
+                            { id: 'debito', label: '💳 Débito' },
+                            { id: 'credito', label: '💳 Crédito' }
+                          ].map((pm) => {
+                            const isSelected = paymentMethod === pm.id;
+                            return (
+                              <button
+                                key={pm.id}
+                                type="button"
+                                onClick={() => {
+                                  setPaymentMethod(pm.id as any);
+                                  setError(null);
+                                }}
+                                className={`py-2 px-3 rounded-xl border text-xs font-bold text-center transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]'
+                                    : 'bg-white text-bento-dark/60 border-bento-border hover:bg-stone-50'
+                                }`}
+                              >
+                                {pm.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
 
                       {/* Configurable Seller WhatsApp (Brazil Phone format) */}
                       <div className="bg-[#FEF3C7]/20 p-4 rounded-2xl border border-[#FDE68A]/40 space-y-2 mt-2">
@@ -419,6 +510,17 @@ export function CartSidebar({
               {/* Footer Total & Send Actions */}
               {cartItems.length > 0 && (
                 <div className="p-6 border-t border-bento-border bg-[#FAF7F2]/40 space-y-4">
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-xs font-semibold flex items-start gap-2 shadow-xs"
+                    >
+                      <span className="text-sm leading-none mt-0.5">⚠️</span>
+                      <span>{error}</span>
+                    </motion.div>
+                  )}
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-bento-dark/60 font-serif">Total do Pedido</span>
                     <span className="text-2xl font-black text-bento-dark tracking-tight font-mono">{formattedTotal}</span>

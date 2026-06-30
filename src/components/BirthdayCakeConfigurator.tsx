@@ -78,13 +78,15 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
   const [selectedCobertura, setSelectedCobertura] = useState(COBERTURAS[0].name);
   const [cakeText, setCakeText] = useState('');
   const [successAnimation, setSuccessAnimation] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleToggleRecheio = (name: string) => {
+    setError(null);
     if (selectedRecheios.includes(name)) {
       setSelectedRecheios(selectedRecheios.filter((r) => r !== name));
     } else {
       if (selectedRecheios.length >= 2) {
-        alert('Você pode selecionar até 2 opções de recheio sem acréscimo!');
+        setError('Você pode selecionar até 2 opções de recheio sem acréscimo!');
         return;
       }
       setSelectedRecheios([...selectedRecheios, name]);
@@ -92,6 +94,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
   };
 
   const handleToggleAdicional = (name: string) => {
+    setError(null);
     if (selectedAdicionais.includes(name)) {
       setSelectedAdicionais(selectedAdicionais.filter((a) => a !== name));
     } else {
@@ -100,8 +103,9 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
   };
 
   const handleAddToCartClick = () => {
+    setError(null);
     if (selectedRecheios.length === 0) {
-      alert('Por favor, selecione pelo menos 1 sabor de recheio para o seu bolo.');
+      setError('Por favor, selecione pelo menos 1 sabor de recheio para o seu bolo.');
       return;
     }
 
@@ -152,23 +156,46 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
 
   return (
     <div className="max-w-4xl mx-auto py-4 px-2 sm:px-4">
-      {/* Decorative Title Card */}
-      <div className="bg-[#4E3629] text-[#FAF6F0] rounded-[32px] p-6 sm:p-10 shadow-xl border-4 border-[#D97706] text-center relative overflow-hidden mb-8">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500"></div>
-        
-        {/* Decorative corner dots/stars */}
-        <div className="absolute -top-10 -left-10 w-24 h-24 bg-amber-500/10 rounded-full blur-xl"></div>
-        <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-amber-500/10 rounded-full blur-xl"></div>
+      {/* Decorative Title Card styled like the main banner */}
+      <div className="relative rounded-[32px] overflow-hidden bg-bento-dark text-white p-8 sm:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-bento-border/10 mb-8">
+        <div className="space-y-4 max-w-xl text-center md:text-left relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-bento-amber-light/10 rounded-full border border-bento-amber-bright/20 text-xs font-bold text-bento-amber-bright">
+            <Sparkles className="w-3.5 h-3.5 fill-bento-amber-bright stroke-bento-amber-bright" />
+            Amiel Gâteaux — Especialidades
+          </div>
+          
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-serif leading-tight text-white">
+            Cardápio <span className="text-bento-amber-bright italic font-normal">Bolos</span> de Aniversário
+          </h2>
+          
+          <p className="text-xs sm:text-sm text-[#FAF7F2]/80 leading-relaxed font-light">
+            Feitos para transformar seu momento em algo inesquecível! Escolha as opções abaixo para montar seu bolo personalizado do seu jeito.
+          </p>
 
-        <span className="text-xs sm:text-sm font-black tracking-[0.2em] text-amber-400 uppercase font-sans">
-          Amiel Gâteaux — Especialidades
-        </span>
-        <h2 className="text-3xl sm:text-5xl font-black font-serif tracking-tight mt-2 text-white">
-          Cardápio <span className="text-amber-400 italic">Bolos</span> de Aniversário
-        </h2>
-        <p className="text-xs sm:text-sm text-stone-300 font-medium max-w-lg mx-auto mt-3">
-          Feitos para transformar seu momento em algo inesquecível! Escolha as opções abaixo para montar seu bolo do seu jeito.
-        </p>
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2 text-xs text-bento-amber-bright/90 font-semibold">
+            <span className="flex items-center gap-1.5 bg-[#4D392B] px-3 py-1 rounded-full">
+              🎂 100% Personalizado
+            </span>
+            <span className="flex items-center gap-1.5 bg-[#4D392B] px-3 py-1 rounded-full">
+              ✨ Ingredientes nobres
+            </span>
+          </div>
+        </div>
+
+        {/* Quick promotional visual graphic */}
+        <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 hidden md:block z-10">
+          <img
+            src="https://images.unsplash.com/photo-1535141192574-5d4897c13636?auto=format&fit=crop&w=300&q=80"
+            alt="Bolo de Aniversário"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover rounded-[24px] shadow-2xl rotate-3 border-4 border-white/10"
+          />
+          <div className="absolute -bottom-2 -left-2 bg-bento-amber text-bento-amber-deep px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-lg shadow-md -rotate-3">
+            Artesanal
+          </div>
+        </div>
+
+        <div className="absolute -right-16 -bottom-16 w-80 h-80 bg-bento-amber rounded-full blur-3xl opacity-25"></div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -177,9 +204,9 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
         <div className="lg:col-span-2 space-y-8">
           
           {/* STEP 1: SIZE */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70 relative">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors relative">
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-7 h-7 bg-amber-100 text-[#4E3629] text-xs font-black rounded-full flex items-center justify-center border border-amber-200">
+              <span className="w-7 h-7 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center border border-bento-amber shadow-xs">
                 1
               </span>
               <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -193,10 +220,13 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 return (
                   <button
                     key={size.id}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => {
+                      setError(null);
+                      setSelectedSize(size);
+                    }}
                     className={`w-full p-4 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#FEF3C7]/40 border-amber-400 ring-1 ring-amber-400 shadow-xs'
+                        ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber shadow-xs'
                         : 'bg-[#FAF7F2]/40 border-bento-border/60 hover:bg-stone-50'
                     }`}
                   >
@@ -231,9 +261,9 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
           </div>
 
           {/* STEP 2: MASSA */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors">
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-7 h-7 bg-amber-100 text-[#4E3629] text-xs font-black rounded-full flex items-center justify-center border border-amber-200">
+              <span className="w-7 h-7 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center border border-bento-amber shadow-xs">
                 2
               </span>
               <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -247,10 +277,13 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 return (
                   <button
                     key={massa.id}
-                    onClick={() => setSelectedMassa(massa.name)}
+                    onClick={() => {
+                      setError(null);
+                      setSelectedMassa(massa.name);
+                    }}
                     className={`p-4 rounded-2xl border flex flex-col items-center justify-center text-center gap-2.5 transition-all cursor-pointer min-h-[100px] ${
                       isSelected
-                        ? 'bg-[#FEF3C7]/40 border-amber-400 ring-1 ring-amber-400'
+                        ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
                         : 'bg-[#FAF7F2]/40 border-bento-border/60 hover:bg-stone-50'
                     }`}
                   >
@@ -265,10 +298,10 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
           </div>
 
           {/* STEP 3: RECHEIOS */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <div className="flex items-center gap-3">
-                <span className="w-7 h-7 bg-amber-100 text-[#4E3629] text-xs font-black rounded-full flex items-center justify-center border border-amber-200">
+                <span className="w-7 h-7 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center border border-bento-amber shadow-xs">
                   3
                 </span>
                 <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -293,13 +326,13 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                       disabled ? 'opacity-45 cursor-not-allowed' : 'cursor-pointer'
                     } ${
                       isSelected
-                        ? 'bg-[#FEF3C7]/30 border-amber-400 text-bento-amber-dark font-bold'
+                        ? 'bg-[#FEF3C7]/30 border-bento-amber text-bento-amber-dark font-bold'
                         : 'bg-white border-bento-border/60 hover:bg-stone-50 text-bento-dark'
                     }`}
                   >
                     <span className="text-xs font-semibold">{item}</span>
                     <div className={`w-4 h-4 rounded flex items-center justify-center border ${
-                      isSelected ? 'bg-amber-500 border-amber-500 text-white' : 'border-stone-300'
+                      isSelected ? 'bg-bento-amber border-bento-amber text-white' : 'border-stone-300'
                     }`}>
                       {isSelected && <Check className="w-3 h-3 stroke-[3px]" />}
                     </div>
@@ -310,10 +343,10 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
           </div>
 
           {/* STEP 4: ADICIONAIS ESPECIAIS */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors">
             <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
               <div className="flex items-center gap-3">
-                <span className="w-7 h-7 bg-amber-100 text-[#4E3629] text-xs font-black rounded-full flex items-center justify-center border border-amber-200">
+                <span className="w-7 h-7 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center border border-bento-amber shadow-xs">
                   4
                 </span>
                 <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -343,7 +376,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                           onClick={() => handleToggleAdicional(item)}
                           className={`p-2 py-2.5 rounded-xl border text-center transition-all cursor-pointer flex items-center justify-center ${
                             isSelected
-                              ? 'bg-amber-500 border-amber-500 text-white font-extrabold'
+                              ? 'bg-bento-amber border-bento-amber text-white font-extrabold'
                               : 'bg-[#FAF7F2]/30 border-bento-border/50 text-bento-dark hover:bg-stone-50'
                           }`}
                         >
@@ -358,9 +391,9 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
           </div>
 
           {/* STEP 5: COBERTURA */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors">
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-7 h-7 bg-amber-100 text-[#4E3629] text-xs font-black rounded-full flex items-center justify-center border border-amber-200">
+              <span className="w-7 h-7 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center border border-bento-amber shadow-xs">
                 5
               </span>
               <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -374,10 +407,13 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 return (
                   <button
                     key={cobertura.name}
-                    onClick={() => setSelectedCobertura(cobertura.name)}
+                    onClick={() => {
+                      setError(null);
+                      setSelectedCobertura(cobertura.name);
+                    }}
                     className={`p-3.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#FEF3C7]/30 border-amber-400 text-bento-amber-dark font-extrabold'
+                        ? 'bg-[#FEF3C7]/30 border-bento-amber text-bento-amber-dark font-extrabold'
                         : 'bg-white border-bento-border/60 hover:bg-stone-50 text-bento-dark'
                     }`}
                   >
@@ -386,7 +422,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                       <span className="text-[9px] text-stone-400 font-bold mt-0.5">{cobertura.badge}</span>
                     </div>
                     <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                      isSelected ? 'bg-amber-500 border-amber-500 text-white' : 'border-stone-300'
+                      isSelected ? 'bg-bento-amber border-bento-amber text-white' : 'border-stone-300'
                     }`}>
                       {isSelected && <Check className="w-2.5 h-2.5 stroke-[3px]" />}
                     </div>
@@ -397,9 +433,9 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
           </div>
 
           {/* WRITING TEXT ON CAKE */}
-          <div className="bg-white rounded-[24px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70 hover:border-bento-amber/20 transition-colors">
             <div className="flex items-center gap-3 mb-3">
-              <span className="w-7 h-7 bg-[#E056FD]/15 text-[#E056FD] text-xs font-black rounded-full flex items-center justify-center">
+              <span className="w-7 h-7 bg-bento-amber/10 text-bento-amber text-xs font-black rounded-full flex items-center justify-center border border-bento-amber/20">
                 ✍️
               </span>
               <h3 className="text-sm font-black text-bento-dark uppercase tracking-wider">
@@ -412,9 +448,12 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
             <input
               type="text"
               value={cakeText}
-              onChange={(e) => setCakeText(e.target.value)}
+              onChange={(e) => {
+                setError(null);
+                setCakeText(e.target.value);
+              }}
               placeholder="Ex: Feliz Aniversário, Ana! (Ou frase do meme pro Bento Cake)"
-              className="w-full px-4 py-3 rounded-xl border border-bento-border/70 focus:outline-none focus:ring-2 focus:ring-[#E056FD]/15 focus:border-[#E056FD] text-xs text-bento-dark placeholder-bento-dark/30 bg-stone-50"
+              className="w-full px-4 py-3 rounded-xl border border-bento-border/70 focus:outline-none focus:ring-2 focus:ring-bento-amber/15 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/30 bg-stone-50"
             />
           </div>
 
@@ -424,8 +463,8 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
         <div className="space-y-6 lg:sticky lg:top-24">
           
           {/* Cake Config Review Box */}
-          <div className="bg-white rounded-[24px] shadow-md border border-bento-border overflow-hidden">
-            <div className="bg-[#4E3629] text-[#FAF6F0] p-4 font-serif text-center font-bold">
+          <div className="bg-white rounded-[24px] sm:rounded-[32px] shadow-sm border border-bento-border overflow-hidden">
+            <div className="bg-bento-dark text-white p-4 font-serif text-center font-extrabold text-sm uppercase tracking-wider">
               🧁 Resumo da Criação
             </div>
             
@@ -441,11 +480,11 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 </p>
                 {selectedRecheios.length > 0 && (
                   <p className="text-[10px] text-stone-500 font-semibold leading-relaxed">
-                    Recheio: <span className="text-amber-700 font-bold">{selectedRecheios.join(' e ')}</span>
+                    Recheio: <span className="text-bento-amber-dark font-bold">{selectedRecheios.join(' e ')}</span>
                   </p>
                 )}
                 <p className="text-[10px] text-stone-500 font-semibold">
-                  Cobertura: <span className="font-bold text-amber-700">{selectedCobertura}</span>
+                  Cobertura: <span className="font-bold text-bento-amber-dark">{selectedCobertura}</span>
                 </p>
                 {cakeText.trim() !== '' && (
                   <div className="mt-2 bg-white px-2 py-1 rounded-lg border border-pink-100 border-dashed inline-block">
@@ -488,14 +527,29 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
               {/* Warnings and Rules from Cardápio */}
               <div className="bg-[#FAF7F2] p-3 rounded-xl border border-bento-border/50 text-[10px] font-semibold text-bento-dark/60 space-y-1.5">
                 <div className="flex items-start gap-1.5">
-                  <Info className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                  <Info className="w-3.5 h-3.5 text-bento-amber flex-shrink-0 mt-0.5" />
                   <p>Até 2 recheios já estão inclusos sem nenhum acréscimo!</p>
                 </div>
                 <div className="flex items-start gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-3.5 h-3.5 text-bento-amber flex-shrink-0 mt-0.5" />
                   <p>Adicionais especiais e coberturas como Buttercream/Ganache podem alterar o valor final sob consulta.</p>
                 </div>
               </div>
+
+              {/* Dynamic Error Message Block */}
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-rose-50 border border-rose-200 rounded-xl p-3 text-[11px] font-semibold text-rose-700 flex items-start gap-1.5"
+                  >
+                    <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <span>{error}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Pricing section */}
               <div className="pt-2 border-t border-bento-border flex justify-between items-center">
@@ -512,7 +566,7 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
                 className={`w-full py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all duration-150 active:scale-95 cursor-pointer text-white shadow-md ${
                   successAnimation
                     ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-[#4E3629] hover:bg-bento-amber hover:shadow-lg'
+                    : 'bg-bento-dark hover:bg-bento-amber hover:shadow-lg'
                 }`}
               >
                 {successAnimation ? (
@@ -532,8 +586,8 @@ export function BirthdayCakeConfigurator({ onAddToCart }: BirthdayCakeConfigurat
 
           {/* Delivery banner/card details */}
           <div className="bg-[#FFFDF6] p-4 rounded-2xl border border-bento-amber/40 text-center text-xs">
-            <p className="font-serif font-bold text-amber-800">🛵 FAÇA SEU PEDIDO COM ANTECEDÊNCIA!</p>
-            <p className="text-[10px] text-stone-500 font-semibold mt-1">
+            <p className="font-serif font-bold text-bento-amber-dark">🛵 FAÇA SEU PEDIDO COM ANTECEDÊNCIA!</p>
+            <p className="text-[10px] text-[#3D2B1F]/60 font-semibold mt-1">
               Todos os bolos são feitos de forma totalmente artesanal com muito carinho para deixar seu dia inesquecível!
             </p>
           </div>

@@ -135,19 +135,43 @@ export default function App() {
         if (dbProducts !== null) {
           loadedFromDb = true;
           if (dbProducts.length > 0) {
-            const updatedDb = dbProducts.map((p) => {
+            const updatedDb: Product[] = [];
+            
+            // Sync / update existing products in database with new default image/descriptions
+            for (const p of dbProducts) {
               const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
               if (defaultProduct) {
-                return {
+                const updatedItem: Product = {
                   ...p,
                   imageUrl: defaultProduct.imageUrl,
                   description: defaultProduct.description,
                   ingredients: defaultProduct.ingredients,
                   sizes: defaultProduct.sizes,
                 };
+                updatedDb.push(updatedItem);
+                
+                // If there's a mismatch (e.g. image URL was updated), save it to Supabase
+                if (p.imageUrl !== defaultProduct.imageUrl || p.description !== defaultProduct.description) {
+                  console.log(`🔄 Atualizando imagem/detalhes de ${p.name} no banco de dados...`);
+                  await dbSaveProduct(updatedItem);
+                }
+              } else {
+                updatedDb.push(p);
               }
-              return p;
-            });
+            }
+
+            // Seed any new products from defaults that are missing in the database
+            const dbProductKeys = new Set(dbProducts.map(p => p.id));
+            const dbProductNames = new Set(dbProducts.map(p => p.name.toLowerCase()));
+            
+            for (const dp of DEFAULT_PRODUCTS) {
+              if (!dbProductKeys.has(dp.id) && !dbProductNames.has(dp.name.toLowerCase())) {
+                console.log(`🌱 Semeando novo produto de fábrica: ${dp.name} no banco de dados...`);
+                await dbSaveProduct(dp);
+                updatedDb.push(dp);
+              }
+            }
+
             setProducts(updatedDb);
             localStorage.setItem('bella_massa_products', JSON.stringify(updatedDb));
           } else {

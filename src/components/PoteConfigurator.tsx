@@ -271,14 +271,10 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
           </div>
         </div>
 
-        {/* Dynamic Image Preview */}
-        <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 hidden md:block z-10">
-          <img
-            src={activeTab === 'classicos' ? selectedPreset?.imageUrl : 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=600&q=80'}
-            alt="Delícia no Pote"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover rounded-[24px] shadow-2xl rotate-3 border-4 border-white/10 transition-all duration-300"
-          />
+        {/* Decorative jar icon block instead of a photo */}
+        <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex-shrink-0 hidden md:block z-10 bg-[#FAF7F2]/10 backdrop-blur-xs rounded-[24px] border border-white/10 flex flex-col items-center justify-center rotate-3 shadow-2xl">
+          <span className="text-6xl select-none">🫙</span>
+          <span className="text-[10px] font-bold text-[#FAF7F2]/60 mt-2 select-none uppercase tracking-widest">Delícia no Pote</span>
           <div className="absolute -bottom-2 -left-2 bg-bento-amber text-bento-amber-deep px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-lg shadow-md -rotate-3">
             Cremoso
           </div>
@@ -377,11 +373,9 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
                             : 'bg-white border-bento-border/50 hover:bg-stone-50'
                         }`}
                       >
-                        <img
-                          src={preset.imageUrl}
-                          alt={preset.name}
-                          className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                        />
+                        <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center text-2xl flex-shrink-0 border border-stone-200 shadow-inner select-none">
+                          {selectedCategory === 'bolos' ? '🍰' : selectedCategory === 'bombons' ? '🍬' : '🥧'}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-extrabold text-xs text-bento-dark truncate">{preset.name}</h4>
                           <p className="text-[10px] text-bento-dark/50 leading-relaxed mt-0.5 line-clamp-2">

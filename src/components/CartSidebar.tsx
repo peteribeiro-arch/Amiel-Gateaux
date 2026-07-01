@@ -347,12 +347,18 @@ export function CartSidebar({
                             className="flex flex-col gap-2 bg-bento-bg/50 p-3.5 rounded-2xl border border-bento-border/60"
                           >
                             <div className="flex gap-3">
-                              <img
-                                src={item.product.imageUrl}
-                                alt={item.product.name}
-                                referrerPolicy="no-referrer"
-                                className="w-14 h-14 rounded-xl object-cover bg-stone-200 flex-shrink-0"
-                              />
+                              {item.product.category === 'potes' ? (
+                                <div className="w-14 h-14 rounded-xl bg-bento-amber/10 text-bento-amber-dark flex items-center justify-center text-2xl flex-shrink-0 border border-bento-amber/20 select-none">
+                                  🫙
+                                </div>
+                              ) : (
+                                <img
+                                  src={item.product.imageUrl}
+                                  alt={item.product.name}
+                                  referrerPolicy="no-referrer"
+                                  className="w-14 h-14 rounded-xl object-cover bg-stone-200 flex-shrink-0"
+                                />
+                              )}
                               
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-xs font-bold text-bento-dark truncate font-serif">{item.product.name}</h4>

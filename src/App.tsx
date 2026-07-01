@@ -7,6 +7,7 @@ import { DEFAULT_PRODUCTS } from './data';
 import { Navbar } from './components/Navbar';
 import { ProductCard } from './components/ProductCard';
 import { BirthdayCakeConfigurator } from './components/BirthdayCakeConfigurator';
+import { PoteConfigurator } from './components/PoteConfigurator';
 import { ProductFormModal } from './components/ProductFormModal';
 import { CartSidebar } from './components/CartSidebar';
 import Logo from './components/Logo';
@@ -560,6 +561,11 @@ export default function App() {
       if (hiddenCategories.includes(p.category)) return false;
     }
 
+    // Filter out potes and aniversario from 'all' view since they use custom configurators
+    if (activeCategory === 'all' && (p.category === 'potes' || p.category === 'aniversario')) {
+      return false;
+    }
+
     const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch =
@@ -595,6 +601,8 @@ export default function App() {
         
         {activeCategory === 'aniversario' ? (
           <BirthdayCakeConfigurator onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />
+        ) : activeCategory === 'potes' ? (
+          <PoteConfigurator onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />
         ) : (
           <>
             {/* Banner Informative / Storefront Hero (Premium Large Bento Cell) */}

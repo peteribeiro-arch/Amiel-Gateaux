@@ -133,7 +133,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Amendoim Moído', 'Doce de Leite', 'Creme de Paçoca Especial', 'Pão de Ló de Baunilha'],
-    imageUrl: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1534080391025-a7db5eedb828?auto=format&fit=crop&w=600&q=80',
     description: 'Camadas generosas de bolo fofinho e um creme artesanal de paçoca bem cremosa com um toque crocante no topo.',
     sizes: [
       { id: 'size-10-ind', name: 'Individual', price: 12.00 },
@@ -185,7 +185,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Mousse Cítrica de Limão', 'Massa Branca de Baunilha', 'Raspas de Limão Taiti', 'Merengue Maçaricado'],
-    imageUrl: 'https://images.unsplash.com/photo-1516685018646-549198525c1b?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1511911063855-2bf39afa5b2e?auto=format&fit=crop&w=600&q=80',
     description: 'Bolo branco bem fofinho e molhado intercalado com um creme aveludado e refrescante de mousse de limão.',
     sizes: [
       { id: 'size-14-ind', name: 'Individual', price: 12.00 },
@@ -211,7 +211,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Brigadeiro de Chocolate Preto', 'Brigadeiro de Chocolate Branco', 'Massa Duo de Bolo'],
-    imageUrl: 'https://images.unsplash.com/photo-1511911313333-ac57457d89df?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
     description: 'O melhor dos dois mundos: camadas de brigadeiro preto tradicional e brigadeiro branco suave com bolo fofinho.',
     sizes: [
       { id: 'size-16-ind', name: 'Individual', price: 12.00 },
@@ -250,7 +250,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Creme de Café Expresso', 'Cacau 100%', 'Toque de Canela', 'Bolo de Chocolate'],
-    imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&w=600&q=80',
     description: 'Para quem adora café: bolo de chocolate molhado com calda de café, creme trufado de cappuccino e canela polvilhada.',
     sizes: [
       { id: 'size-19-ind', name: 'Individual', price: 12.00 },
@@ -263,7 +263,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Doce de Leite Cozido de Minas', 'Massa Especial de Canela', 'Açúcar e Canela para Polvilhar'],
-    imageUrl: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1624371414361-e6e8ea04f112?auto=format&fit=crop&w=600&q=80',
     description: 'Deliciosa massa leve e perfumada com canela, recheada com muito doce de leite cremoso artesanal mineiro.',
     sizes: [
       { id: 'size-20-ind', name: 'Individual', price: 12.00 },
@@ -302,7 +302,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Morangos Inteiros', 'Creme Branco Nobre', 'Cobertura de Ganache de Chocolate'],
-    imageUrl: 'https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80',
     description: 'Morangos inteiros suculentos envoltos em um sedoso creme de leite condensado, cobertos com calda generosa de chocolate.',
     sizes: [
       { id: 'size-23-ind', name: 'Individual', price: 12.00 },
@@ -341,7 +341,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Bombom Ouro Branco Picado', 'Creme Branco de Laka', 'Ganache de Chocolate Branco'],
-    imageUrl: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80',
     description: 'Delicioso creme de chocolate branco trufado intercalado com pedacinhos crocantes de bombom Ouro Branco original.',
     sizes: [
       { id: 'size-26-ind', name: 'Individual', price: 12.00 },
@@ -354,8 +354,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Morangos', 'Geleia de Morango Caseira', 'Creme de Confeiteiro', 'Farofa Crocante de Biscoito'],
-    imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
-    description: 'Farofinha crocante amanteigada de biscoito, creme de confeiteiro aveludado com geleia de morango de verdade por cima.',
+    imageUrl: 'https://images.unsplash.com/photo-1570786544006-4444a1708325?auto=format&fit=crop&w=600&q=80',
+    description: 'Farofinha crocante amanteigada de biscoito, creme de confeiteiro aveludado with geleia de morango de verdade por cima.',
     sizes: [
       { id: 'size-27-ind', name: 'Individual', price: 10.00 },
       { id: 'size-27-fam', name: 'Família', price: 70.00 }
@@ -380,7 +380,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Doce de Leite', 'Banana Nanica Fresca', 'Chantilly', 'Canela', 'Biscoito Moído'],
-    imageUrl: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80',
     description: 'Camadas de doce de leite cremoso, bananas fatiadas fresquinhas, chantilly leve, canela e base de biscoito.',
     sizes: [
       { id: 'size-29-ind', name: 'Individual', price: 10.00 },
@@ -406,7 +406,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Biscoito Oreo Picado', 'Creme de Laka Aerado', 'Creme de Oreo', 'Ganache de Chocolate'],
-    imageUrl: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1600431521340-491eca880813?auto=format&fit=crop&w=600&q=80',
     description: 'Tortinha no pote super crocante e saborosa com biscoito Oreo picadinho misturado com creme de leite condensado especial.',
     sizes: [
       { id: 'size-31-ind', name: 'Individual', price: 10.00 },
@@ -419,7 +419,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Queijo Cream Cheese Suave', 'Calda Quente de Goiabada Cascão', 'Farofa Doce de Biscoito'],
-    imageUrl: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=600&q=80',
     description: 'A clássica sobremesa brasileira reinventada em camadas de creme de queijo levemente salgadinho e goiabada cremosa.',
     sizes: [
       { id: 'size-32-ind', name: 'Individual', price: 10.00 },

@@ -32,6 +32,13 @@ const CATEGORIES_LIST: { id: Category; label: string; icon: string; activeStyle:
     inactiveStyle: 'bg-white text-bento-dark/70 hover:bg-stone-50 border border-bento-border'
   },
   {
+    id: 'salgados',
+    label: 'Salgados',
+    icon: '🥪',
+    activeStyle: 'bg-bento-amber text-white',
+    inactiveStyle: 'bg-white text-bento-dark/70 hover:bg-stone-50 border border-bento-border'
+  },
+  {
     id: 'bolos',
     label: 'Bolos Especiais',
     icon: '🎂',

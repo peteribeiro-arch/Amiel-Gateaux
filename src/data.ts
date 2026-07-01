@@ -2,87 +2,225 @@ import { Product } from './types';
 
 export const DEFAULT_PRODUCTS: Product[] = [
   {
-    id: '1',
-    name: 'Torta de Limão Siciliano',
+    id: 'torta-doce-morango',
+    name: 'Torta de Morango',
     category: 'doces',
-    price: 89.90,
-    ingredients: ['Limão Siciliano', 'Leite Condensado', 'Merengue Italiano', 'Massa de Biscoito Amanteigado'],
-    imageUrl: '/assets/images/lemon_meringue_tart_1782777880427.jpg',
-    description: 'Nossa famosa torta com creme cítrico aveludado de limão siciliano, coberta com um merengue dourado impecável.',
-    sizes: [
-      { id: 'size-1-p', name: 'Individual (Fatia)', price: 18.00 },
-      { id: 'size-1-m', name: 'Média (8 fatias)', price: 89.90 },
-      { id: 'size-1-g', name: 'Grande (14 fatias)', price: 145.00 }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Torta de Morango Silvestre',
-    category: 'doces',
-    price: 98.00,
-    ingredients: ['Morangos Frescos', 'Creme de Baunilha Real', 'Geleia de Brilho', 'Massa Podre Doce'],
+    price: 70.00,
+    ingredients: ['Morangos Selecionados', 'Creme de Confeiteiro', 'Massa Doce Assada'],
     imageUrl: '/assets/images/strawberry_tart_1782777704003.jpg',
-    description: 'Massa crocante preenchida com creme de confeiteiro artesanal e decorada com morangos frescos selecionados.',
+    description: 'Torta doce assada tradicional de morango, com recheio cremoso e cobertura brilhante de morangos selecionados.',
     sizes: [
-      { id: 'size-2-p', name: 'Individual (Fatia)', price: 20.00 },
-      { id: 'size-2-m', name: 'Média (8 fatias)', price: 98.00 },
-      { id: 'size-2-g', name: 'Grande (14 fatias)', price: 155.00 }
+      { id: 'td-morango-fam', name: 'Família', price: 70.00 }
     ]
   },
   {
-    id: '3',
-    name: 'Torta Banoffee Premium',
+    id: 'torta-doce-limao',
+    name: 'Torta de Limão',
     category: 'doces',
-    price: 92.50,
-    ingredients: ['Banana Nanica', 'Doce de Leite Caseiro', 'Chantilly Leve', 'Toque de Canela', 'Massa de Chocolate'],
-    imageUrl: '/assets/images/banoffee_pie_1782777894833.jpg',
-    description: 'Camadas generosas do melhor doce de leite, bananas frescas fatiadas e chantilly fresco salpicado com canela.',
+    price: 70.00,
+    ingredients: ['Creme de Limão Cítrico', 'Massa Doce Crocante', 'Merengue Dourado'],
+    imageUrl: '/assets/images/lemon_meringue_tart_1782777880427.jpg',
+    description: 'Clássica torta doce assada de limão, combinando creme cítrico aveludado e merengue tostado.',
     sizes: [
-      { id: 'size-3-p', name: 'Individual (Fatia)', price: 19.00 },
-      { id: 'size-3-m', name: 'Média (8 fatias)', price: 92.50 },
-      { id: 'size-3-g', name: 'Grande (14 fatias)', price: 150.00 }
+      { id: 'td-limao-fam', name: 'Família', price: 70.00 }
     ]
   },
   {
-    id: '4',
-    name: 'Quiche Gourmet de Alho-Poró',
-    category: 'salgadas',
-    price: 79.90,
-    ingredients: ['Alho-poró Caramelizado', 'Queijo Gruyère', 'Creme de Leite Fresco', 'Massa Brisée Crocante'],
-    imageUrl: '/assets/images/leek_quiche_1782777903648.jpg',
-    description: 'Quiche clássica francesa com alho-poró suave e creme rico que derrete na boca.',
+    id: 'torta-doce-cheesecake',
+    name: 'Torta Cheesecake',
+    category: 'doces',
+    price: 70.00,
+    ingredients: ['Cream Cheese Real', 'Geleia de Frutas Vermelhas', 'Farofa Doce de Biscoito'],
+    imageUrl: '/assets/images/cheesecake_red_fruits_1782867099114.jpg',
+    description: 'Deliciosa torta cheesecake assada com textura leve, base de biscoito amanteigado e calda de frutas silvestres.',
     sizes: [
-      { id: 'size-4-p', name: 'Individual (Mini)', price: 16.00 },
-      { id: 'size-4-m', name: 'Média (6 fatias)', price: 79.90 },
-      { id: 'size-4-g', name: 'Grande (12 fatias)', price: 135.00 }
+      { id: 'td-cheesecake-fam', name: 'Família', price: 70.00 }
     ]
   },
   {
-    id: '5',
-    name: 'Empadão Cremoso de Frango',
+    id: 'torta-doce-holandesa',
+    name: 'Torta Holandesa',
+    category: 'doces',
+    price: 70.00,
+    ingredients: ['Creme Holandês Nobre', 'Ganache de Chocolate', 'Biscoito Calypso'],
+    imageUrl: '/assets/images/dutch_pie_torta_holandesa_1782867172497.jpg',
+    description: 'A tradicional torta holandesa assada com creme de baunilha aveludado, cobertura espessa de ganache e biscoitos.',
+    sizes: [
+      { id: 'td-holandesa-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-doce-choc-caramelo',
+    name: 'Torta de Chocolate e Caramelo',
+    category: 'doces',
+    price: 70.00,
+    ingredients: ['Chocolate Belga Meio Amargo', 'Caramelo Toffee Artesanal', 'Massa de Cacau'],
+    imageUrl: '/assets/images/choc_caramel_tart_1782866858185.jpg',
+    description: 'Equilíbrio perfeito entre o amargor do chocolate nobre e a doçura do caramelo toffee artesanal sobre massa crocante.',
+    sizes: [
+      { id: 'td-choc-caramelo-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-doce-maca-creme',
+    name: 'Torta de Maçã e Creme',
+    category: 'doces',
+    price: 70.00,
+    ingredients: ['Maçãs Caramelizadas', 'Creme de Confeiteiro Recheado', 'Toque de Canela'],
+    imageUrl: '/assets/images/apple_cream_tart_1782866932900.jpg',
+    description: 'Torta rústica assada de maçã com creme de confeiteiro suave e fatias de maçã temperadas com canela.',
+    sizes: [
+      { id: 'td-maca-creme-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-salgada-frango-req',
+    name: 'Torta de Frango e Requeijão',
     category: 'salgadas',
-    price: 85.00,
-    ingredients: ['Peito de Frango Desfiado', 'Catupiry Autêntico', 'Azeitonas Verdes', 'Massa Podre Amanteigada'],
+    price: 10.00,
+    ingredients: ['Peito de Frango Desfiado', 'Requeijão Cremoso', 'Azeitonas', 'Massa Amanteigada'],
     imageUrl: '/assets/images/chicken_pie_1782777913401.jpg',
-    description: 'O verdadeiro empadão brasileiro com massa super amanteigada que desmancha na boca e recheio ultra cremoso.',
+    description: 'O clássico empadão assado com frango suculento e bastante requeijão cremoso na massa que derrete na boca.',
     sizes: [
-      { id: 'size-5-p', name: 'Individual (Mini)', price: 17.50 },
-      { id: 'size-5-m', name: 'Médio (4 fatias)', price: 85.00 },
-      { id: 'size-5-g', name: 'Grande (10 fatias)', price: 140.00 }
+      { id: 'ts-frango-req-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-frango-req-fam', name: 'Família', price: 70.00 }
     ]
   },
   {
-    id: '6',
-    name: 'Torta de Palmito Nobre',
+    id: 'torta-salgada-frango',
+    name: 'Torta de Frango',
     category: 'salgadas',
-    price: 88.00,
-    ingredients: ['Palmito Pupunha', 'Ervilhas Frescas', 'Molho Bechamel', 'Queijo Parmesão Gratinado'],
-    imageUrl: '/assets/images/heart_of_palm_pie_1782777921635.jpg',
-    description: 'Uma torta vegetariana sofisticada, recheada com palmito macio e molho branco temperado com ervas finas.',
+    price: 10.00,
+    ingredients: ['Peito de Frango Selecionado', 'Milho', 'Temperos Caseiros', 'Massa Crocante'],
+    imageUrl: '/assets/images/chicken_pie_hearts_1782867324822.jpg',
+    description: 'Torta de frango tradicional assada, com recheio generoso e muito bem temperado.',
     sizes: [
-      { id: 'size-6-p', name: 'Individual (Mini)', price: 18.00 },
-      { id: 'size-6-m', name: 'Média (6 fatias)', price: 88.00 },
-      { id: 'size-6-g', name: 'Grande (12 fatias)', price: 145.00 }
+      { id: 'ts-frango-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-frango-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-salgada-palmito-queijo',
+    name: 'Torta de Palmito e Queijo',
+    category: 'salgadas',
+    price: 10.00,
+    ingredients: ['Palmito Pupunha Nobre', 'Queijo Muçarela Derretido', 'Molho Branco', 'Massa Brisée'],
+    imageUrl: '/assets/images/heart_of_palm_pie_1782777921635.jpg',
+    description: 'Torta salgada assada com recheio cremoso de palmito selecionado e uma camada de queijo derretido.',
+    sizes: [
+      { id: 'ts-palmito-queijo-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-palmito-queijo-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-salgada-alho-bacon',
+    name: 'Torta de Alho Poró e Bacon',
+    category: 'salgadas',
+    price: 10.00,
+    ingredients: ['Alho-poró Refogado', 'Bacon Defumado Crocante', 'Queijo Gruyère', 'Creme de Leite'],
+    imageUrl: '/assets/images/leek_quiche_1782777903648.jpg',
+    description: 'Quiche gourmet com alho-poró macio, creme de ovos rico e pedaços generosos de bacon crocante.',
+    sizes: [
+      { id: 'ts-alho-bacon-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-alho-bacon-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-salgada-calabresa-cebola',
+    name: 'Torta de Calabresa e Cebola',
+    category: 'salgadas',
+    price: 10.00,
+    ingredients: ['Calabresa Moída Defumada', 'Cebolas Caramelizadas', 'Catupiry', 'Massa Amanteigada'],
+    imageUrl: '/assets/images/calabresa_onion_pie_1782867411691.jpg',
+    description: 'Maravilhosa torta assada recheada com calabresa defumada fatiada e cebolas suavemente refogadas.',
+    sizes: [
+      { id: 'ts-calabresa-cebola-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-calabresa-cebola-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'torta-salgada-atum-tomate',
+    name: 'Torta de Atum e Tomate',
+    category: 'salgadas',
+    price: 10.00,
+    ingredients: ['Atum Sólido Selecionado', 'Tomates Frescos Picados', 'Cebola e Ervas finas', 'Massa Frola'],
+    imageUrl: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    description: 'Recheio super saboroso e suculento de atum com tomates frescos, azeitonas e ervas aromáticas.',
+    sizes: [
+      { id: 'ts-atum-tomate-ind', name: 'Individual', price: 10.00 },
+      { id: 'ts-atum-tomate-fam', name: 'Família', price: 70.00 }
+    ]
+  },
+  {
+    id: 'salgado-hamburgao',
+    name: 'Hamburgão',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Hambúrguer de Carne', 'Muçarela', 'Presunto fatiado', 'Massa de Pão Doce Assada'],
+    imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
+    description: 'Grande e fofinho salgado assado recheado com hambúrguer inteiro, queijo derretido e presunto.',
+    sizes: [
+      { id: 'salg-hamburgao-ind', name: 'Individual', price: 8.00 }
+    ]
+  },
+  {
+    id: 'salgado-mini-pizza',
+    name: 'Mini Pizza Tradicional',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Massa Artesanal de Pizza', 'Molho de Tomate Rústico', 'Muçarela', 'Orégano'],
+    imageUrl: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=600&q=80',
+    description: 'Deliciosa mini pizza individual assada na hora, com queijo muçarela derretido e orégano de qualidade.',
+    sizes: [
+      { id: 'salg-mini-pizza-ind', name: 'Individual', price: 8.00 }
+    ]
+  },
+  {
+    id: 'salgado-sanduiche-frango',
+    name: 'Sanduíche Natural de Frango',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Pão de Forma Integral', 'Patê Caseiro de Frango', 'Cenoura Ralada', 'Alface Fresca'],
+    imageUrl: 'https://images.unsplash.com/photo-1540713434306-5376c21c9a82?auto=format&fit=crop&w=600&q=80',
+    description: 'Sanduíche natural saudável, montado com patê artesanal cremoso de frango desfiado, milho e vegetais.',
+    sizes: [
+      { id: 'salg-sand-frango-ind', name: 'Individual', price: 8.00 }
+    ]
+  },
+  {
+    id: 'salgado-sanduiche-peru',
+    name: 'Sanduíche Natural de Peito de Peru',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Pão de Forma Integral', 'Peito de Peru Light', 'Cream Cheese', 'Alface e Tomate'],
+    imageUrl: 'https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=600&q=80',
+    description: 'Opção equilibrada com fatias finas de peito de peru defumado, creme suave de queijo e folhas verdes.',
+    sizes: [
+      { id: 'salg-sand-peru-ind', name: 'Individual', price: 8.00 }
+    ]
+  },
+  {
+    id: 'salgado-sanduiche-salaminho',
+    name: 'Sanduíche Natural de Salaminho',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Pão de Forma Macio', 'Salaminho Italiano', 'Queijo Prato fatiado', 'Maionese Leve'],
+    imageUrl: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&w=600&q=80',
+    description: 'Saboroso sanduíche frio recheado com fatias selecionadas de salaminho italiano, queijo prato e alface.',
+    sizes: [
+      { id: 'salg-sand-salame-ind', name: 'Individual', price: 8.00 }
+    ]
+  },
+  {
+    id: 'salgado-sanduiche-atum',
+    name: 'Sanduíche Natural de Atum',
+    category: 'salgados',
+    price: 8.00,
+    ingredients: ['Pão de Forma Integral', 'Patê de Atum com Ervas', 'Cebolinha', 'Folhas de Alface'],
+    imageUrl: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&fit=crop&w=600&q=80',
+    description: 'Delicioso sanduíche natural frio com patê cremoso de atum preparado com ervas finas e folhas crocantes.',
+    sizes: [
+      { id: 'salg-sand-atum-ind', name: 'Individual', price: 8.00 }
     ]
   },
   {

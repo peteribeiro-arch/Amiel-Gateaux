@@ -155,6 +155,11 @@ export default function App() {
             
             // Sync / update existing products in database with new default image/descriptions
             for (const p of dbProducts) {
+              if (['1', '2', '3', '4', '5', '6'].includes(p.id)) {
+                console.log(`🗑️ Removendo produto de template antigo da nuvem: ${p.name}`);
+                await dbDeleteProduct(p.id);
+                continue;
+              }
               const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
               if (defaultProduct) {
                 const updatedItem: Product = {
@@ -229,6 +234,10 @@ export default function App() {
             
             // Map existing products to their new counterparts
             for (const p of parsed) {
+              if (['1', '2', '3', '4', '5', '6'].includes(p.id)) {
+                console.log(`🗑️ Removendo produto de template antigo local: ${p.name}`);
+                continue;
+              }
               const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
               if (defaultProduct) {
                 updated.push({
@@ -873,6 +882,7 @@ export default function App() {
                   {[
                     { id: 'doces', label: '🍰 Tortas Doces' },
                     { id: 'salgadas', label: '🥧 Tortas Salgadas' },
+                    { id: 'salgados', label: '🥪 Salgados' },
                     { id: 'bolos', label: '🎂 Bolos Especiais' },
                     { id: 'aniversario', label: '🎈 Bolos de Aniversário' },
                     { id: 'potes', label: '🫙 Delícias no Pote' },
@@ -936,9 +946,11 @@ export default function App() {
               {activeCategory === 'all'
                 ? 'Cardápio Completo'
                 : activeCategory === 'doces'
-                ? 'Tortas Doces Deliciosas'
+                ? 'Tortas Doces Assadas'
                 : activeCategory === 'salgadas'
-                ? 'Tortas Salgadas Gourmet'
+                ? 'Tortas Salgadas Assadas'
+                : activeCategory === 'salgados'
+                ? 'Salgados Artesanais'
                 : activeCategory === 'bolos'
                 ? 'Bolos de Festa & Fofinhos'
                 : 'Delícias no Pote'}

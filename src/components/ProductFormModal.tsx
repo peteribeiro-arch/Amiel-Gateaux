@@ -291,7 +291,10 @@ export function ProductFormModal({
                 >
                   <option value="doces">🍰 Torta Doce</option>
                   <option value="salgadas">🥧 Torta Salgada</option>
-                  <option value="bolos">🎂 Bolo</option>
+                  <option value="salgados">🥪 Salgado</option>
+                  <option value="bolos">🎂 Bolo Especial</option>
+                  <option value="potes">🫙 Delícia no Pote</option>
+                  <option value="aniversario">🎈 Bolo de Aniversário</option>
                 </select>
               </div>
 

@@ -8,6 +8,7 @@ import { Navbar } from './components/Navbar';
 import { ProductCard } from './components/ProductCard';
 import { BirthdayCakeConfigurator } from './components/BirthdayCakeConfigurator';
 import { PoteConfigurator } from './components/PoteConfigurator';
+import { FestivalDeFatias } from './components/FestivalDeFatias';
 import { ProductFormModal } from './components/ProductFormModal';
 import { CartSidebar } from './components/CartSidebar';
 import Logo from './components/Logo';
@@ -613,7 +614,9 @@ export default function App() {
       {/* Main Content Container */}
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8">
         
-        {activeCategory === 'aniversario' ? (
+        {activeCategory === 'festival' ? (
+          <FestivalDeFatias onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />
+        ) : activeCategory === 'aniversario' ? (
           <BirthdayCakeConfigurator onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />
         ) : activeCategory === 'potes' ? (
           <PoteConfigurator onAddToCart={handleAddToCart} isAdminMode={isAdminMode} />

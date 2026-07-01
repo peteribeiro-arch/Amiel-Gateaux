@@ -18,6 +18,13 @@ interface NavbarProps {
 
 const CATEGORIES_LIST: { id: Category; label: string; icon: string; activeStyle: string; inactiveStyle: string }[] = [
   {
+    id: 'festival',
+    label: 'Festival de Fatias (04/07)',
+    icon: '⭐',
+    activeStyle: 'bg-[#B45309] text-white shadow-md border border-[#B45309]',
+    inactiveStyle: 'bg-amber-50 text-[#B45309] border border-amber-200 hover:bg-amber-100 font-black animate-pulse'
+  },
+  {
     id: 'doces',
     label: 'Tortas Doces',
     icon: '🍰',

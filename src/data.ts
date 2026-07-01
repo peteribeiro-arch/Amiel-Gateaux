@@ -157,7 +157,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgados',
     price: 8.00,
     ingredients: ['Hambúrguer de Carne', 'Muçarela', 'Presunto fatiado', 'Massa de Pão Doce Assada'],
-    imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/assets/images/hamburgao_baked_snack_1782867600992.jpg',
     description: 'Grande e fofinho salgado assado recheado com hambúrguer inteiro, queijo derretido e presunto.',
     sizes: [
       { id: 'salg-hamburgao-ind', name: 'Individual', price: 8.00 }

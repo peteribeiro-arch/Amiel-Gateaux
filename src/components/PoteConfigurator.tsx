@@ -75,48 +75,13 @@ const ADICIONAIS_POTE = [
 ];
 
 export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfiguratorProps) {
-  // Navigation between Tabs: "clássicos" vs "personalizado"
-  const [activeTab, setActiveTab] = useState<'classicos' | 'personalizado'>('classicos');
-  
   // States for pre-defined (Clássico) tab
   const [selectedCategory, setSelectedCategory] = useState<'bolos' | 'bombons' | 'tortinhas'>('bolos');
-  const [selectedPreset, setSelectedPreset] = useState<any>(PRESETS.bolos[1]); // Default to Ninho com Nutella
+  const [selectedPreset, setSelectedPreset] = useState<any>(null); // Do not pre-select
   const [presetSize, setPresetSize] = useState<'individual' | 'familia'>('individual');
-
-  // States for customizable (Monte seu Pote) tab
-  const [customBase, setCustomBase] = useState<'bolos' | 'bombons' | 'tortinhas'>('bolos');
-  const [customSize, setCustomSize] = useState<'individual' | 'familia'>('individual');
-  const [selectedMassa, setSelectedMassa] = useState<string | null>(null);
-  const [selectedRecheios, setSelectedRecheios] = useState<string[]>([]);
-  const [selectedAdicionais, setSelectedAdicionais] = useState<string[]>([]);
-  const [customObservation, setCustomObservation] = useState('');
 
   const [error, setError] = useState<string | null>(null);
   const [successAnimation, setSuccessAnimation] = useState(false);
-
-  // Helper for toggle fillings (max 2)
-  const handleToggleRecheio = (name: string) => {
-    setError(null);
-    if (selectedRecheios.includes(name)) {
-      setSelectedRecheios(selectedRecheios.filter((r) => r !== name));
-    } else {
-      if (selectedRecheios.length >= 2) {
-        setError('Você pode selecionar no máximo 2 recheios para o seu pote!');
-        return;
-      }
-      setSelectedRecheios([...selectedRecheios, name]);
-    }
-  };
-
-  // Helper for toggle extras
-  const handleToggleAdicional = (name: string) => {
-    setError(null);
-    if (selectedAdicionais.includes(name)) {
-      setSelectedAdicionais(selectedAdicionais.filter((a) => a !== name));
-    } else {
-      setSelectedAdicionais([...selectedAdicionais, name]);
-    }
-  };
 
   // Preset Add to Cart
   const handlePresetAddToCart = () => {
@@ -153,96 +118,6 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
     setTimeout(() => setSuccessAnimation(false), 2000);
   };
 
-  // Custom Add to Cart
-  const handleCustomAddToCart = () => {
-    setError(null);
-    if (!selectedMassa) {
-      setError('Por favor, escolha uma massa ou base crocante.');
-      return;
-    }
-    if (selectedRecheios.length === 0) {
-      setError('Por favor, selecione pelo menos 1 recheio.');
-      return;
-    }
-
-    // Determine prices
-    let basePrice = 12.00; // default for cake/bombom individual
-    let familyPrice = 60.00;
-    if (customBase === 'tortinhas') {
-      basePrice = 10.00;
-      familyPrice = 70.00;
-    } else if (customBase === 'bombons') {
-      basePrice = 12.00;
-      familyPrice = 70.00;
-    }
-
-    let calculatedPrice = customSize === 'individual' ? basePrice : familyPrice;
-    
-    // Add additional prices if individual
-    if (customSize === 'individual') {
-      selectedAdicionais.forEach(name => {
-        const item = ADICIONAIS_POTE.find(a => a.name === name);
-        if (item) calculatedPrice += item.price;
-      });
-    } else {
-      // For family size, scale extra cost proportionally or fixed
-      selectedAdicionais.forEach(name => {
-        const item = ADICIONAIS_POTE.find(a => a.name === name);
-        if (item) calculatedPrice += item.price * 3; // family size multiplier
-      });
-    }
-
-    const categoryLabel = customBase === 'bolos' 
-      ? 'Bolo no Pote' 
-      : customBase === 'bombons' 
-      ? 'Bombom no Pote' 
-      : 'Tortinha no Pote';
-
-    const sizeName = customSize === 'individual' ? 'Individual (250ml)' : 'Família (1,2L)';
-
-    const customName = `${categoryLabel} Personalizado - ${customSize === 'individual' ? 'Individual' : 'Família'}`;
-    
-    const virtualProduct: Product = {
-      id: `custom-pote-${Date.now()}`,
-      name: customName,
-      category: 'potes',
-      price: calculatedPrice,
-      ingredients: [selectedMassa, ...selectedRecheios, ...selectedAdicionais],
-      imageUrl: customBase === 'bolos' 
-        ? 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=600&q=80'
-        : customBase === 'bombons'
-        ? 'https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&w=600&q=80'
-        : 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=600&q=80',
-      description: `Seu pote customizado montado com ${selectedMassa}, recheios de ${selectedRecheios.join(' e ')}${selectedAdicionais.length > 0 ? ', adicionais: ' + selectedAdicionais.join(', ') : ''}.`
-    };
-
-    const selectedSizeObj: ProductSize = {
-      id: `pote-custom-${customSize}`,
-      name: sizeName,
-      price: calculatedPrice
-    };
-
-    let observation = `Base: ${selectedMassa} | Recheios: ${selectedRecheios.join(' & ')}`;
-    if (selectedAdicionais.length > 0) {
-      observation += ` | Adicionais: ${selectedAdicionais.join(', ')}`;
-    }
-    if (customObservation.trim()) {
-      observation += ` | Observação: ${customObservation.trim()}`;
-    }
-
-    onAddToCart(virtualProduct, selectedSizeObj, observation);
-
-    setSuccessAnimation(true);
-    setTimeout(() => {
-      setSuccessAnimation(false);
-      // Reset builder options
-      setSelectedMassa(null);
-      setSelectedRecheios([]);
-      setSelectedAdicionais([]);
-      setCustomObservation('');
-    }, 2000);
-  };
-
   return (
     <div className="w-full">
       {/* Promo banner styled like the main App banner */}
@@ -258,7 +133,7 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
           </h2>
           
           <p className="text-xs sm:text-sm text-[#FAF7F2]/80 leading-relaxed font-light">
-            Monte sua sobremesa no potinho dos sonhos ou escolha entre os nossos sabores clássicos de extremo sucesso! Perfeitos para devorar sozinho ou presentear quem você ama.
+            Escolha entre os nossos deliciosos sabores clássicos de extremo sucesso! Perfeitos para devorar sozinho ou presentear quem você ama.
           </p>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2 text-xs text-bento-amber-bright/90 font-semibold">
@@ -283,45 +158,7 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
         <div className="absolute -right-16 -bottom-16 w-80 h-80 bg-bento-amber rounded-full blur-3xl opacity-25"></div>
       </div>
 
-      {/* Selector between Clássicos (Preset) and Monte Seu Pote (Custom Builder) */}
-      <div className="flex justify-center mb-8 p-1.5 bg-stone-100 rounded-2xl max-w-md mx-auto border border-stone-200 shadow-xs">
-        <button
-          onClick={() => {
-            setError(null);
-            setActiveTab('classicos');
-          }}
-          className={`flex-1 py-3 text-xs font-extrabold rounded-xl transition-all ${
-            activeTab === 'classicos'
-              ? 'bg-white text-bento-dark shadow-xs border border-stone-200'
-              : 'text-stone-500 hover:text-stone-800'
-          }`}
-        >
-          🍰 Sabores Clássicos
-        </button>
-        <button
-          onClick={() => {
-            setError(null);
-            setActiveTab('personalizado');
-          }}
-          className={`flex-1 py-3 text-xs font-extrabold rounded-xl transition-all ${
-            activeTab === 'personalizado'
-              ? 'bg-white text-bento-dark shadow-xs border border-stone-200'
-              : 'text-stone-500 hover:text-stone-800'
-          }`}
-        >
-          👩‍🍳 Monte seu Pote
-        </button>
-      </div>
-
-      <AnimatePresence mode="wait">
-        {activeTab === 'classicos' ? (
-          <motion.div
-            key="classicos"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
-          >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             {/* Classicos Filter & Selector */}
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
@@ -339,7 +176,7 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
                       key={cat.id}
                       onClick={() => {
                         setSelectedCategory(cat.id as any);
-                        setSelectedPreset(PRESETS[cat.id as 'bolos' | 'bombons' | 'tortinhas'][0]);
+                        setSelectedPreset(null);
                       }}
                       className={`py-3.5 px-2 rounded-xl border text-center font-extrabold text-xs transition-all flex flex-col items-center gap-1.5 cursor-pointer ${
                         selectedCategory === cat.id
@@ -398,389 +235,98 @@ export function PoteConfigurator({ onAddToCart, isAdminMode = false }: PoteConfi
 
             {/* Right Side: Size & Cart for Clássicos */}
             <div className="space-y-6">
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span>📏</span> Escolha o Tamanho
-                </h3>
+              {!selectedPreset ? (
+                <div className="bg-white rounded-[24px] sm:rounded-[32px] p-8 text-center flex flex-col items-center justify-center border border-bento-border/70 min-h-[350px] shadow-sm">
+                  <span className="text-5xl mb-4 select-none">🥄</span>
+                  <h4 className="text-sm font-bold text-bento-dark font-serif">Selecione um Sabor</h4>
+                  <p className="text-xs text-stone-500 mt-2 max-w-[200px] leading-relaxed">
+                    Escolha um dos nossos deliciosos sabores clássicos ao lado para escolher o tamanho e adicionar ao carrinho.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
+                    <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <span>📏</span> Escolha o Tamanho
+                    </h3>
 
-                <div className="space-y-3">
-                  {[
-                    { id: 'individual', label: 'Individual (250ml)', price: selectedPreset?.price || 12.00, icon: '🥄', desc: 'Sobremesa pessoal na medida ideal.' },
-                    { id: 'familia', label: 'Família (1,2L)', price: selectedPreset?.familyPrice || 60.00, icon: '👪', desc: 'Embalagem grande ideal para compartilhar.' }
-                  ].map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setPresetSize(size.id as any)}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                        presetSize === size.id
-                          ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
-                          : 'bg-stone-50 border-stone-200 hover:bg-stone-100/50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl">{size.icon}</span>
+                    <div className="space-y-3">
+                      {[
+                        { id: 'individual', label: 'Individual (250ml)', price: selectedPreset?.price || 12.00, icon: '🥄', desc: 'Sobremesa pessoal na medida ideal.' },
+                        { id: 'familia', label: 'Família (1,2L)', price: selectedPreset?.familyPrice || 60.00, icon: '👪', desc: 'Embalagem grande ideal para compartilhar.' }
+                      ].map((size) => (
+                        <button
+                          key={size.id}
+                          onClick={() => setPresetSize(size.id as any)}
+                          className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                            presetSize === size.id
+                              ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
+                              : 'bg-stone-50 border-stone-200 hover:bg-stone-100/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl">{size.icon}</span>
+                            <div>
+                              <h4 className="text-xs font-extrabold text-bento-dark">{size.label}</h4>
+                              <p className="text-[10px] text-stone-400 font-semibold">{size.desc}</p>
+                            </div>
+                          </div>
+                          <span className="text-sm font-black text-bento-dark font-mono">
+                            R$ {size.price.toFixed(2)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Summary / Order Actions */}
+                  <div className="bg-bento-dark text-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-xl relative overflow-hidden border border-bento-border/10">
+                    <div className="relative z-10 space-y-4">
+                      <div className="flex justify-between items-start">
                         <div>
-                          <h4 className="text-xs font-extrabold text-bento-dark">{size.label}</h4>
-                          <p className="text-[10px] text-stone-400 font-semibold">{size.desc}</p>
+                          <span className="text-[10px] text-bento-amber-bright/70 font-black tracking-widest uppercase">Item Selecionado</span>
+                          <h4 className="text-sm font-black text-white mt-1">{selectedPreset?.name}</h4>
+                          <p className="text-[10px] text-white/50 leading-relaxed mt-1 font-semibold">
+                            Tamanho: {presetSize === 'individual' ? 'Individual (250ml)' : 'Família (1,2L)'}
+                          </p>
                         </div>
+                        <Heart className="w-5 h-5 text-bento-amber-bright fill-bento-amber-bright" />
                       </div>
-                      <span className="text-sm font-black text-bento-dark font-mono">
-                        R$ {size.price.toFixed(2)}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
 
-              {/* Summary / Order Actions */}
-              <div className="bg-bento-dark text-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-xl relative overflow-hidden border border-bento-border/10">
-                <div className="relative z-10 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-[10px] text-bento-amber-bright/70 font-black tracking-widest uppercase">Item Selecionado</span>
-                      <h4 className="text-sm font-black text-white mt-1">{selectedPreset?.name}</h4>
-                      <p className="text-[10px] text-white/50 leading-relaxed mt-1 font-semibold">
-                        Tamanho: {presetSize === 'individual' ? 'Individual (250ml)' : 'Família (1,2L)'}
-                      </p>
-                    </div>
-                    <Heart className="w-5 h-5 text-bento-amber-bright fill-bento-amber-bright" />
-                  </div>
+                      <hr className="border-white/10" />
 
-                  <hr className="border-white/10" />
-
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-white/60">Total</span>
-                    <span className="text-2xl font-black text-bento-amber-bright font-mono">
-                      R$ {(presetSize === 'individual' ? selectedPreset?.price : selectedPreset?.familyPrice)?.toFixed(2)}
-                    </span>
-                  </div>
-
-                  {error && (
-                    <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-center gap-2 text-xs text-rose-300">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <button
-                    onClick={handlePresetAddToCart}
-                    className="w-full py-4 rounded-xl bg-bento-amber hover:bg-bento-amber-light text-bento-amber-deep font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all active:scale-[0.98]"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    Adicionar ao Carrinho
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="personalizado"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
-          >
-            {/* Custom Builder steps */}
-            <div className="lg:col-span-2 space-y-6">
-              
-              {/* STEP 1: Select Custom Type */}
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <div className="flex items-center gap-2.5 mb-4">
-                  <span className="w-6 h-6 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center shadow-xs">1</span>
-                  <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider">Tipo de Sobremesa</h3>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { id: 'bolos', label: 'Bolo no Pote', icon: '🍰', desc: 'Camadas de bolo e cremes' },
-                    { id: 'bombons', label: 'Bombom no Pote', icon: '🍬', desc: 'Frutas, creme e ganache' },
-                    { id: 'tortinhas', label: 'Tortinha no Pote', icon: '🥧', desc: 'Base crocante de biscoito' }
-                  ].map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => {
-                        setCustomBase(type.id as any);
-                        setSelectedMassa(null);
-                        setSelectedRecheios([]);
-                        setError(null);
-                      }}
-                      className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
-                        customBase === type.id
-                          ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
-                          : 'bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100/50'
-                      }`}
-                    >
-                      <span className="text-xl">{type.icon}</span>
-                      <span className="text-xs font-extrabold text-bento-dark">{type.label}</span>
-                      <span className="text-[8px] text-stone-400 font-medium leading-tight">{type.desc}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* STEP 2: Choose Base / Crust */}
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <div className="flex items-center gap-2.5 mb-4">
-                  <span className="w-6 h-6 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center shadow-xs">2</span>
-                  <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider">Massa ou Base</h3>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {MASSAS_POTE.map((massa) => {
-                    const isSelected = selectedMassa === massa.name;
-                    return (
-                      <button
-                        key={massa.id}
-                        onClick={() => setSelectedMassa(massa.name)}
-                        className={`p-3.5 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
-                            : 'bg-stone-50 border-stone-200 hover:bg-stone-100/50'
-                        }`}
-                      >
-                        <div className={`w-5 h-5 rounded-full ${massa.color} border border-stone-300 shadow-inner flex-shrink-0`} />
-                        <div>
-                          <h4 className="text-xs font-extrabold text-bento-dark">{massa.name}</h4>
-                          <p className="text-[9px] text-stone-400 font-semibold">{massa.desc}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* STEP 3: Choose Cremes / Recheios */}
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center shadow-xs">3</span>
-                    <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider">Recheios Cremosos (Escolha até 2)</h3>
-                  </div>
-                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Sem acréscimo
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {RECHEIOS_POTE.map((recheio) => {
-                    const isSelected = selectedRecheios.includes(recheio.name);
-                    const disabled = !isSelected && selectedRecheios.length >= 2;
-                    return (
-                      <button
-                        key={recheio.name}
-                        disabled={disabled}
-                        onClick={() => handleToggleRecheio(recheio.name)}
-                        className={`p-3 rounded-xl border text-left flex items-start gap-3 transition-all ${
-                          disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
-                        } ${
-                          isSelected
-                            ? 'bg-[#FEF3C7]/30 border-bento-amber text-bento-amber-dark font-extrabold'
-                            : 'bg-white border-bento-border/50 hover:bg-stone-50 text-bento-dark'
-                        }`}
-                      >
-                        <div className={`w-4 h-4 rounded border flex-shrink-0 mt-0.5 flex items-center justify-center ${
-                          isSelected ? 'bg-bento-amber border-bento-amber text-white' : 'border-stone-300 bg-white'
-                        }`}>
-                          {isSelected && <Check className="w-3 h-3 stroke-[3px]" />}
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold">{recheio.name}</h4>
-                          <p className="text-[9px] text-stone-400 font-semibold mt-0.5 leading-tight">{recheio.desc}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* STEP 4: Choose Toppings / Extras */}
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 bg-bento-amber text-white text-xs font-black rounded-full flex items-center justify-center shadow-xs">4</span>
-                    <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider">Adicionais & Crocantes</h3>
-                  </div>
-                  <span className="text-[9px] bg-amber-50 text-bento-amber-dark font-black px-2 py-0.5 rounded-full">Opcionais</span>
-                </div>
-                <p className="text-[10px] text-stone-400 font-semibold mb-4">Adicione texturas, frutas frescas ou chocolates nobres ao seu potinho.</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {ADICIONAIS_POTE.map((adicional) => {
-                    const isSelected = selectedAdicionais.includes(adicional.name);
-                    const additionalPriceStr = `+ R$ ${adicional.price.toFixed(2)}`;
-                    return (
-                      <button
-                        key={adicional.name}
-                        onClick={() => handleToggleAdicional(adicional.name)}
-                        className={`p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#FEF3C7]/30 border-bento-amber text-bento-amber-dark font-extrabold'
-                            : 'bg-white border-bento-border/50 hover:bg-stone-50 text-bento-dark'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 pr-2">
-                          <div className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
-                            isSelected ? 'bg-bento-amber border-bento-amber text-white' : 'border-stone-300 bg-white'
-                          }`}>
-                            {isSelected && <Check className="w-3 h-3 stroke-[3px]" />}
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-bold">{adicional.name}</h4>
-                            <p className="text-[9px] text-stone-400 font-semibold mt-0.5 leading-tight">{adicional.desc}</p>
-                          </div>
-                        </div>
-                        <span className="text-[10px] font-black font-mono text-bento-amber-dark shrink-0">
-                          {additionalPriceStr}
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-semibold text-white/60">Total</span>
+                        <span className="text-2xl font-black text-bento-amber-bright font-mono">
+                          R$ {(presetSize === 'individual' ? selectedPreset?.price : selectedPreset?.familyPrice)?.toFixed(2)}
                         </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Special Instructions */}
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <span className="text-lg">✍️</span>
-                  <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider">Observações do Pedido</h3>
-                </div>
-                <input
-                  type="text"
-                  value={customObservation}
-                  onChange={(e) => setCustomObservation(e.target.value)}
-                  placeholder="Ex: Mandar colher extra, sem canela, etc."
-                  className="w-full px-4 py-3 rounded-xl border border-bento-border/70 focus:outline-none focus:ring-2 focus:ring-bento-amber/15 focus:border-bento-amber text-xs text-bento-dark placeholder-bento-dark/30 bg-stone-50"
-                />
-              </div>
-
-            </div>
-
-            {/* Custom Builder Size & Action sidebar */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-sm border border-bento-border/70">
-                <h3 className="text-xs font-black text-bento-dark uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span>📏</span> Escolha o Tamanho
-                </h3>
-
-                <div className="space-y-3">
-                  {[
-                    { id: 'individual', label: 'Individual (250ml)', price: customBase === 'tortinhas' ? 10.00 : 12.00, icon: '🥄', desc: 'Sua porção ideal de felicidade.' },
-                    { id: 'familia', label: 'Família (1,2L)', price: customBase === 'bolos' ? 60.00 : 70.00, icon: '👪', desc: 'Perfeito para servir a família.' }
-                  ].map((size) => {
-                    // Calculate preview total price
-                    let computedPrice = size.price;
-                    selectedAdicionais.forEach(name => {
-                      const item = ADICIONAIS_POTE.find(a => a.name === name);
-                      if (item) {
-                        computedPrice += size.id === 'individual' ? item.price : item.price * 3;
-                      }
-                    });
-                    return (
-                      <button
-                        key={size.id}
-                        onClick={() => setCustomSize(size.id as any)}
-                        className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                          customSize === size.id
-                            ? 'bg-[#FEF3C7]/40 border-bento-amber ring-1 ring-bento-amber'
-                            : 'bg-stone-50 border-stone-200 hover:bg-stone-100/50'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{size.icon}</span>
-                          <div>
-                            <h4 className="text-xs font-extrabold text-bento-dark">{size.label}</h4>
-                            <p className="text-[10px] text-stone-400 font-semibold">{size.desc}</p>
-                          </div>
-                        </div>
-                        <span className="text-sm font-black text-bento-dark font-mono">
-                          R$ {computedPrice.toFixed(2)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Live Summary Card */}
-              <div className="bg-bento-dark text-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 shadow-xl border border-bento-border/10">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-[10px] text-bento-amber-bright/70 font-black tracking-widest uppercase">Pote Personalizado</span>
-                      <h4 className="text-sm font-black text-white mt-1">
-                        {customBase === 'bolos' ? '🍰 Bolo no Pote' : customBase === 'bombons' ? '🍬 Bombom no Pote' : '🥧 Tortinha no Pote'}
-                      </h4>
-                    </div>
-                    <span className="text-xs bg-[#4D392B] px-2.5 py-1 rounded-full text-bento-amber-bright font-black">
-                      MONTE SEU POTE
-                    </span>
-                  </div>
-
-                  <hr className="border-white/10" />
-
-                  <div className="space-y-2 text-[11px] leading-relaxed">
-                    <div className="flex justify-between">
-                      <span className="text-white/50 font-semibold">Tamanho:</span>
-                      <span className="text-white/90 font-bold">{customSize === 'individual' ? 'Individual (250ml)' : 'Família (1,2L)'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-white/50 font-semibold">Massa/Base:</span>
-                      <span className="text-white/90 font-bold max-w-[150px] truncate text-right">{selectedMassa || 'Não selecionada'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-white/50 font-semibold">Recheios:</span>
-                      <span className="text-white/90 font-bold max-w-[150px] truncate text-right">{selectedRecheios.join(' & ') || 'Nenhum'}</span>
-                    </div>
-                    {selectedAdicionais.length > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-white/50 font-semibold">Adicionais:</span>
-                        <span className="text-white/90 font-bold max-w-[150px] truncate text-right">{selectedAdicionais.join(', ')}</span>
                       </div>
-                    )}
-                  </div>
 
-                  <hr className="border-white/10" />
+                      {error && (
+                        <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-center gap-2 text-xs text-rose-300">
+                          <AlertCircle className="w-4 h-4 shrink-0" />
+                          <span>{error}</span>
+                        </div>
+                      )}
 
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-white/60">Total</span>
-                    <span className="text-2xl font-black text-bento-amber-bright font-mono">
-                      R$ {(() => {
-                        let total = customSize === 'individual' 
-                          ? (customBase === 'tortinhas' ? 10.00 : 12.00) 
-                          : (customBase === 'bolos' ? 60.00 : 70.00);
-                        
-                        selectedAdicionais.forEach(name => {
-                          const item = ADICIONAIS_POTE.find(a => a.name === name);
-                          if (item) {
-                            total += customSize === 'individual' ? item.price : item.price * 3;
-                          }
-                        });
-                        return total;
-                      })().toFixed(2)}
-                    </span>
-                  </div>
-
-                  {error && (
-                    <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-center gap-2 text-xs text-rose-300">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{error}</span>
+                      <button
+                        onClick={handlePresetAddToCart}
+                        className="w-full py-4 rounded-xl bg-bento-amber hover:bg-bento-amber-light text-bento-amber-deep font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all active:scale-[0.98]"
+                      >
+                        <ShoppingBag className="w-4 h-4" />
+                        Adicionar ao Carrinho
+                      </button>
                     </div>
-                  )}
-
-                  <button
-                    onClick={handleCustomAddToCart}
-                    className="w-full py-4 rounded-xl bg-bento-amber hover:bg-bento-amber-light text-bento-amber-deep font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all active:scale-[0.98]"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    Adicionar ao Carrinho
-                  </button>
-                </div>
-              </div>
+                  </div>
+                </>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+
+
+
+
+
 
       {/* Floating Success Alert Toast */}
       <AnimatePresence>

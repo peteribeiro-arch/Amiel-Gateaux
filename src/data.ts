@@ -144,7 +144,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgadas',
     price: 10.00,
     ingredients: ['Atum Sólido Selecionado', 'Tomates Frescos Picados', 'Cebola e Ervas finas', 'Massa Frola'],
-    imageUrl: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/assets/images/tuna_tomato_pie_1782867496784.jpg',
     description: 'Recheio super saboroso e suculento de atum com tomates frescos, azeitonas e ervas aromáticas.',
     sizes: [
       { id: 'ts-atum-tomate-ind', name: 'Individual', price: 10.00 },

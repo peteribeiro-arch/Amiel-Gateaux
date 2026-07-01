@@ -146,7 +146,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Leite Ninho original', 'Nutella de Verdade', 'Creme de Leite Condensado', 'Massa de Chocolate Belga'],
-    imageUrl: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80',
     description: 'O sabor mais amado de todos: bolo de chocolate molhadinho intercalado com creme de Leite Ninho e Nutella pura.',
     sizes: [
       { id: 'size-11-ind', name: 'Individual', price: 12.00 },
@@ -211,7 +211,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Brigadeiro de Chocolate Preto', 'Brigadeiro de Chocolate Branco', 'Massa Duo de Bolo'],
-    imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1511911313333-ac57457d89df?auto=format&fit=crop&w=600&q=80',
     description: 'O melhor dos dois mundos: camadas de brigadeiro preto tradicional e brigadeiro branco suave com bolo fofinho.',
     sizes: [
       { id: 'size-16-ind', name: 'Individual', price: 12.00 },
@@ -289,7 +289,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Nutella', 'Ganache de Chocolate Belga', 'Massa de Cacau Úmida'],
-    imageUrl: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80',
     description: 'Bolo de chocolate úmido recheado com brigadeiro trufado e coberto com Nutella original cremosa.',
     sizes: [
       { id: 'size-22-ind', name: 'Individual', price: 12.00 },
@@ -341,7 +341,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 12.00,
     ingredients: ['Bombom Ouro Branco Picado', 'Creme Branco de Laka', 'Ganache de Chocolate Branco'],
-    imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1549007994-cb92ca87df46?auto=format&fit=crop&w=600&q=80',
     description: 'Delicioso creme de chocolate branco trufado intercalado com pedacinhos crocantes de bombom Ouro Branco original.',
     sizes: [
       { id: 'size-26-ind', name: 'Individual', price: 12.00 },
@@ -354,7 +354,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Morangos', 'Geleia de Morango Caseira', 'Creme de Confeiteiro', 'Farofa Crocante de Biscoito'],
-    imageUrl: 'https://images.unsplash.com/photo-1570786544006-4444a1708325?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
     description: 'Farofinha crocante amanteigada de biscoito, creme de confeiteiro aveludado with geleia de morango de verdade por cima.',
     sizes: [
       { id: 'size-27-ind', name: 'Individual', price: 10.00 },
@@ -367,7 +367,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Creme de Limão Refrescante', 'Farofinha de Biscoito Amanteigado', 'Raspas de Limão'],
-    imageUrl: 'https://images.unsplash.com/photo-1511911063855-2bf39afa5b2e?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1516685018646-549198525c1b?auto=format&fit=crop&w=600&q=80',
     description: 'Releitura da clássica torta de limão no potinho com creme cítrico e doce no ponto certo e farofa de biscoito.',
     sizes: [
       { id: 'size-28-ind', name: 'Individual', price: 10.00 },
@@ -380,7 +380,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Doce de Leite', 'Banana Nanica Fresca', 'Chantilly', 'Canela', 'Biscoito Moído'],
-    imageUrl: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=600&q=80',
     description: 'Camadas de doce de leite cremoso, bananas fatiadas fresquinhas, chantilly leve, canela e base de biscoito.',
     sizes: [
       { id: 'size-29-ind', name: 'Individual', price: 10.00 },
@@ -419,7 +419,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Queijo Cream Cheese Suave', 'Calda Quente de Goiabada Cascão', 'Farofa Doce de Biscoito'],
-    imageUrl: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1570145820259-b5b80c5c8bd6?auto=format&fit=crop&w=600&q=80',
     description: 'A clássica sobremesa brasileira reinventada em camadas de creme de queijo levemente salgadinho e goiabada cremosa.',
     sizes: [
       { id: 'size-32-ind', name: 'Individual', price: 10.00 },
@@ -432,7 +432,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'potes',
     price: 10.00,
     ingredients: ['Creme Holandês Nobre', 'Ganache de Chocolate Meio Amargo', 'Biscoito Calypso / Amanteigado'],
-    imageUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80',
     description: 'Delicado creme holandês preparado com creme de leite fresco, base crocante de biscoito amanteigado e ganache meio amargo.',
     sizes: [
       { id: 'size-33-ind', name: 'Individual', price: 10.00 },

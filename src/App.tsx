@@ -166,9 +166,14 @@ export default function App() {
                 };
                 updatedDb.push(updatedItem);
                 
-                // If there's a mismatch (e.g. image URL was updated), save it to Supabase
-                if (p.imageUrl !== defaultProduct.imageUrl || p.description !== defaultProduct.description) {
-                  console.log(`🔄 Atualizando imagem/detalhes de ${p.name} no banco de dados...`);
+                // If there's a mismatch (e.g. image URL was updated, or ingredients/sizes changed), save it to Supabase
+                if (
+                  p.imageUrl !== defaultProduct.imageUrl || 
+                  p.description !== defaultProduct.description ||
+                  JSON.stringify(p.ingredients) !== JSON.stringify(defaultProduct.ingredients) ||
+                  JSON.stringify(p.sizes) !== JSON.stringify(defaultProduct.sizes)
+                ) {
+                  console.log(`🔄 Sincronizando e atualizando ${p.name} no banco de dados...`);
                   await dbSaveProduct(updatedItem);
                 }
               } else {

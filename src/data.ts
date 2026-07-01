@@ -169,7 +169,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     category: 'salgados',
     price: 8.00,
     ingredients: ['Massa Artesanal de Pizza', 'Molho de Tomate Rústico', 'Muçarela', 'Orégano'],
-    imageUrl: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=600&q=80',
+    imageUrl: '/assets/images/mini_pizza_tradicional_1782948924387.jpg',
     description: 'Deliciosa mini pizza individual assada na hora, com queijo muçarela derretido e orégano de qualidade.',
     sizes: [
       { id: 'salg-mini-pizza-ind', name: 'Individual', price: 8.00 }

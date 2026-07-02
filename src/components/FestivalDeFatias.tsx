@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Check, Calendar, Clock, HelpCircle, Heart, Plus } from 'lucide-react';
 import { Product, CustomCakeConfig, Category } from '../types';
 
-const festivalBannerImg = '/src/assets/images/festival_banner_1782950436829.jpg';
+const festivalBannerImg = '/assets/images/festival_banner_1782950436829.jpg';
 
 interface FestivalDeFatiasProps {
   onAddToCart: (product: Product, selectedSize?: any, observation?: string, config?: CustomCakeConfig) => void;

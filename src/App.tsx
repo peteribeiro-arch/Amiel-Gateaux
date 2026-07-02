@@ -15,6 +15,7 @@ import Logo from './components/Logo';
 import LoginModal from './components/LoginModal';
 import {
   isSupabaseConfigured,
+  supabase,
   dbFetchProducts,
   dbSaveProduct,
   dbDeleteProduct,
@@ -342,9 +343,79 @@ export default function App() {
       } catch (error) {
         console.warn('Erro de sincronização em segundo plano:', error);
       }
-    }, 4000); // 4 seconds interval for high responsiveness
+    }, 2000); // 2 seconds interval for maximum responsiveness
 
     return () => clearInterval(interval);
+  }, []);
+
+  // --- Realtime WebSocket Synchronization via Supabase Channels ---
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    // Listen to changes in settings table (hidden_categories)
+    const settingsChannel = supabase
+      .channel('public-settings-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'settings' },
+        (payload) => {
+          if (payload.new && (payload.new as any).key === 'hidden_categories') {
+            const dbHiddenCats = (payload.new as any).value as Category[];
+            if (dbHiddenCats) {
+              setHiddenCategories((prev) => {
+                if (JSON.stringify(prev) !== JSON.stringify(dbHiddenCats)) {
+                  localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(dbHiddenCats));
+                  return dbHiddenCats;
+                }
+                return prev;
+              });
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    // Listen to changes in products table
+    const productsChannel = supabase
+      .channel('public-products-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'products' },
+        async () => {
+          const dbProducts = await dbFetchProducts();
+          if (dbProducts !== null && dbProducts.length > 0) {
+            setProducts((prev) => {
+              const serializedPrev = JSON.stringify(prev.map(p => ({ id: p.id, hidden: p.hidden, price: p.price, name: p.name })));
+              const serializedDb = JSON.stringify(dbProducts.map(p => ({ id: p.id, hidden: p.hidden, price: p.price, name: p.name })));
+              
+              if (serializedPrev !== serializedDb) {
+                const updatedList = dbProducts.map((p) => {
+                  const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
+                  if (defaultProduct) {
+                    return {
+                      ...p,
+                      imageUrl: defaultProduct.imageUrl,
+                      description: defaultProduct.description,
+                      ingredients: defaultProduct.ingredients,
+                      sizes: defaultProduct.sizes,
+                    };
+                  }
+                  return p;
+                });
+                localStorage.setItem('bella_massa_products', JSON.stringify(updatedList));
+                return updatedList;
+              }
+              return prev;
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(settingsChannel);
+      supabase.removeChannel(productsChannel);
+    };
   }, []);
 
   // --- Sync State back to localStorage ---

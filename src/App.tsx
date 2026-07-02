@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Sliders, RefreshCw, Star, MapPin, Clock, ShieldAlert, Sparkles, Eye, EyeOff } from 'lucide-react';
 
@@ -47,6 +47,7 @@ export default function App() {
   const [hiddenCategories, setHiddenCategories] = useState<Category[]>([]);
   const [supabaseSchemaError, setSupabaseSchemaError] = useState(false);
   const [supabaseErrorMessage, setSupabaseErrorMessage] = useState<string | null>(null);
+  const [hasInitializedDefaultCategory, setHasInitializedDefaultCategory] = useState(false);
 
   // --- Subscribe to Supabase Connection/Schema Errors ---
   useEffect(() => {
@@ -339,6 +340,33 @@ export default function App() {
       setActiveCategory('all');
     }
   }, [isAdminMode, activeCategory, hiddenCategories]);
+
+  // --- Landing page / Default active category logic ---
+  // Sets 'festival' as default homepage if visible. If it is hidden, defaults to 'all'.
+  const prevFestivalHiddenRef = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    const isFestivalHidden = hiddenCategories.includes('festival');
+    const defaultCategory = isFestivalHidden ? 'all' : 'festival';
+
+    if (!hasInitializedDefaultCategory) {
+      setActiveCategory(defaultCategory);
+      setHasInitializedDefaultCategory(true);
+      prevFestivalHiddenRef.current = isFestivalHidden;
+    } else {
+      // Monitor changes to the visibility of the festival
+      if (prevFestivalHiddenRef.current !== null && prevFestivalHiddenRef.current !== isFestivalHidden) {
+        if (isFestivalHidden) {
+          if (activeCategory === 'festival') {
+            setActiveCategory('all');
+          }
+        } else {
+          setActiveCategory('festival');
+        }
+        prevFestivalHiddenRef.current = isFestivalHidden;
+      }
+    }
+  }, [hiddenCategories, hasInitializedDefaultCategory, activeCategory]);
 
   // --- Product Management Logic ---
   const handleSaveProduct = async (productData: Partial<Product>) => {

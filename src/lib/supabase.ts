@@ -349,3 +349,27 @@ export async function dbUpdateOrderStatus(orderId: string, status: string): Prom
   }
 }
 
+/**
+ * Delete all orders from Supabase
+ */
+export async function dbDeleteAllOrders(): Promise<boolean> {
+  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return false;
+
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .delete()
+      .gte('total', 0); // Delete all orders where total >= 0
+
+    if (error) {
+      console.warn('Erro ao deletar todos os pedidos do Supabase:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.warn('Erro de conexão ao deletar todos os pedidos:', error);
+    return false;
+  }
+}
+

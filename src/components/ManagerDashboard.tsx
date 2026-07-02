@@ -4,10 +4,10 @@ import {
   X, Search, Phone, ClipboardCheck, Sparkles, RefreshCw, 
   TrendingUp, Clock, CheckCircle, Ban, Filter, BarChart3, 
   MapPin, CreditCard, ChevronRight, AlertCircle, Calendar,
-  ArrowRight, DollarSign, ShoppingBag, Eye
+  ArrowRight, DollarSign, ShoppingBag, Eye, Trash2
 } from 'lucide-react';
 import { Order } from '../types';
-import { dbFetchAllOrders, dbUpdateOrderStatus, isSupabaseConfigured } from '../lib/supabase';
+import { dbFetchAllOrders, dbUpdateOrderStatus, dbDeleteAllOrders, isSupabaseConfigured } from '../lib/supabase';
 
 interface ManagerDashboardProps {
   isOpen: boolean;
@@ -104,6 +104,40 @@ export function ManagerDashboard({ isOpen, onClose, isAdminMode }: ManagerDashbo
       loadOrders();
     }
   }, [isOpen, isAdminMode]);
+
+  const handleClearAllOrders = async () => {
+    if (!confirm('⚠️ Tem certeza de que deseja ZERAR todos os pedidos? Esta ação é irreversível e apagará todos os registros locais e no banco de dados.')) {
+      return;
+    }
+
+    setIsLoading(true);
+    setFeedbackMsg(null);
+    try {
+      let success = true;
+      if (isSupabaseConfigured) {
+        success = await dbDeleteAllOrders();
+      }
+
+      // Also clear local storage
+      localStorage.setItem('bella_massa_orders', '[]');
+
+      if (success) {
+        setOrders([]);
+        setSelectedOrder(null);
+        setFeedbackMsg('🗑️ Todos os pedidos foram zerados com sucesso!');
+        setTimeout(() => setFeedbackMsg(null), 4000);
+      } else {
+        setFeedbackMsg('⚠️ Ocorreu um erro ao zerar pedidos no banco de dados, mas os locais foram limpos.');
+        setOrders([]);
+        setSelectedOrder(null);
+      }
+    } catch (err) {
+      console.error('Error clearing orders:', err);
+      setFeedbackMsg('⚠️ Ocorreu um erro ao tentar zerar os pedidos.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!isOpen || !isAdminMode) return null;
 
@@ -238,6 +272,18 @@ export function ManagerDashboard({ isOpen, onClose, isAdminMode }: ManagerDashbo
           </div>
 
           <div className="flex items-center gap-2.5">
+            {orders.length > 0 && (
+              <button
+                onClick={handleClearAllOrders}
+                disabled={isLoading}
+                className="p-2.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 transition-all text-rose-700 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                title="Zerar todos os pedidos"
+              >
+                <Trash2 className="w-4 h-4 text-rose-600" />
+                <span className="hidden sm:inline">Zerar Pedidos</span>
+              </button>
+            )}
+
             <button
               onClick={loadOrders}
               disabled={isLoading}

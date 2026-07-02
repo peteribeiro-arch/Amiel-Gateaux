@@ -22,7 +22,8 @@ import {
   dbSaveHiddenCategories,
   subscribeToSupabaseErrors,
   dbFetchAllOrders,
-  dbUpdateOrderStatus
+  dbUpdateOrderStatus,
+  dbDeleteAllOrders
 } from './lib/supabase';
 import { CustomerArea } from './components/CustomerArea';
 import { ManagerDashboard } from './components/ManagerDashboard';
@@ -583,6 +584,34 @@ export default function App() {
     setAdminOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
   };
 
+  const handleClearAllOrders = async () => {
+    if (!confirm('⚠️ Tem certeza de que deseja ZERAR todos os pedidos? Esta ação apagará permanentemente todos os registros do banco de dados e os locais.')) {
+      return;
+    }
+
+    setIsLoadingAdminOrders(true);
+    try {
+      let success = true;
+      if (isSupabaseConfigured) {
+        success = await dbDeleteAllOrders();
+      }
+
+      // Clear LocalStorage
+      localStorage.setItem('bella_massa_orders', '[]');
+
+      if (success) {
+        setAdminOrders([]);
+      } else {
+        alert('⚠️ Ocorreu um erro ao zerar pedidos no banco de dados, mas os registros locais foram limpos.');
+        setAdminOrders([]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingAdminOrders(false);
+    }
+  };
+
   useEffect(() => {
     if (isAdminMode) {
       loadAdminOrders();
@@ -787,15 +816,28 @@ export default function App() {
                     <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-bento-amber-dark flex items-center gap-1.5">
                       📦 Registro de Encomendas Recebidas ({adminOrders.length})
                     </h4>
-                    <button
-                      type="button"
-                      onClick={loadAdminOrders}
-                      disabled={isLoadingAdminOrders}
-                      className="text-[10px] font-black uppercase text-bento-amber hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <RefreshCw className={`w-3 h-3 ${isLoadingAdminOrders ? 'animate-spin' : ''}`} />
-                      Sincronizar Pedidos
-                    </button>
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={loadAdminOrders}
+                        disabled={isLoadingAdminOrders}
+                        className="text-[10px] font-black uppercase text-bento-amber hover:text-bento-amber-dark flex items-center gap-1 cursor-pointer"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${isLoadingAdminOrders ? 'animate-spin' : ''}`} />
+                        Sincronizar Pedidos
+                      </button>
+
+                      {adminOrders.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={handleClearAllOrders}
+                          disabled={isLoadingAdminOrders}
+                          className="text-[10px] font-black uppercase text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer border border-rose-200 bg-rose-50/50 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition-colors font-sans"
+                        >
+                          Zerar Pedidos
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {isLoadingAdminOrders ? (

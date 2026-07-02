@@ -291,6 +291,62 @@ export default function App() {
     loadData();
   }, []);
 
+  // --- Periodic Synchronization (Polling) for Global Consistency ("todos os acessos") ---
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    const interval = setInterval(async () => {
+      try {
+        // 1. Sync Hidden Categories globally
+        const dbHiddenCats = await dbFetchHiddenCategories();
+        if (dbHiddenCats !== null) {
+          setHiddenCategories((prev) => {
+            // Check if there is an actual difference to avoid unnecessary react renders
+            if (JSON.stringify(prev) !== JSON.stringify(dbHiddenCats)) {
+              localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(dbHiddenCats));
+              return dbHiddenCats;
+            }
+            return prev;
+          });
+        }
+
+        // 2. Sync Active Products list globally (e.g., hidden products, price changes, edits)
+        const dbProducts = await dbFetchProducts();
+        if (dbProducts !== null && dbProducts.length > 0) {
+          setProducts((prev) => {
+            // Keep local overrides if we added new products/images on the fly, 
+            // but align with DB for matches
+            const serializedPrev = JSON.stringify(prev.map(p => ({ id: p.id, hidden: p.hidden, price: p.price, name: p.name })));
+            const serializedDb = JSON.stringify(dbProducts.map(p => ({ id: p.id, hidden: p.hidden, price: p.price, name: p.name })));
+            
+            if (serializedPrev !== serializedDb) {
+              const updatedList = dbProducts.map((p) => {
+                const defaultProduct = DEFAULT_PRODUCTS.find((dp) => dp.id === p.id || dp.name.toLowerCase() === p.name.toLowerCase());
+                if (defaultProduct) {
+                  return {
+                    ...p,
+                    imageUrl: defaultProduct.imageUrl,
+                    description: defaultProduct.description,
+                    ingredients: defaultProduct.ingredients,
+                    sizes: defaultProduct.sizes,
+                  };
+                }
+                return p;
+              });
+              localStorage.setItem('bella_massa_products', JSON.stringify(updatedList));
+              return updatedList;
+            }
+            return prev;
+          });
+        }
+      } catch (error) {
+        console.warn('Erro de sincronização em segundo plano:', error);
+      }
+    }, 4000); // 4 seconds interval for high responsiveness
+
+    return () => clearInterval(interval);
+  }, []);
+
   // --- Sync State back to localStorage ---
   const saveProductsToStorage = (updatedProducts: Product[]) => {
     setProducts(updatedProducts);

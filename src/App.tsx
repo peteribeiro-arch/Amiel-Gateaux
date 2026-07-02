@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Sliders, RefreshCw, Star, MapPin, Clock, ShieldAlert, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { Plus, Sliders, RefreshCw, Star, MapPin, Clock, ShieldAlert, Sparkles, Eye, EyeOff, X, Megaphone } from 'lucide-react';
+
+// @ts-ignore
+import festivalBannerImg from './assets/images/festival_banner_1782954908744.jpg';
 
 import { Product, Category, CartItem, CustomCakeConfig } from './types';
 import { DEFAULT_PRODUCTS } from './data';
@@ -57,9 +60,10 @@ export default function App() {
     }
     return [];
   });
-  const [supabaseSchemaError, setSupabaseSchemaError] = useState(false);
+   const [supabaseSchemaError, setSupabaseSchemaError] = useState(false);
   const [supabaseErrorMessage, setSupabaseErrorMessage] = useState<string | null>(null);
   const [hasInitializedDefaultCategory, setHasInitializedDefaultCategory] = useState(false);
+  const [isFestivalAnnouncementOpen, setIsFestivalAnnouncementOpen] = useState(true);
 
   // --- Subscribe to Supabase Connection/Schema Errors ---
   useEffect(() => {
@@ -864,6 +868,16 @@ export default function App() {
                 <MapPin className="w-3.5 h-3.5 text-bento-amber-bright" /> Entregas em toda a região
               </span>
             </div>
+
+            <div className="pt-3 flex justify-center md:justify-start">
+              <button
+                onClick={() => setIsFestivalAnnouncementOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-bento-amber hover:bg-bento-amber-bright text-bento-amber-deep rounded-2xl text-xs font-black shadow-lg shadow-bento-amber/15 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] border border-transparent"
+              >
+                <Megaphone className="w-4 h-4 fill-bento-amber-deep stroke-bento-amber-deep" />
+                <span>📢 Anúncio do 3º Festival de Fatias</span>
+              </button>
+            </div>
           </div>
 
           {/* Quick promotional visual graphic */}
@@ -1333,6 +1347,96 @@ export default function App() {
           setIsManagerDashboardOpen(true);
         }}
       />
+
+      {/* 3º Festival de Fatias Announcement Modal */}
+      <AnimatePresence>
+        {isFestivalAnnouncementOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFestivalAnnouncementOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+
+            {/* Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-lg w-full relative z-10 border border-amber-100 flex flex-col"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsFestivalAnnouncementOpen(false)}
+                className="absolute top-4 right-4 z-20 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 backdrop-blur-xs transition-colors cursor-pointer"
+                aria-label="Fechar modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Banner Image */}
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-stone-100">
+                <img
+                  src={festivalBannerImg}
+                  alt="3º Festival de Fatias Amiel Gâteaux"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-6">
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-950/60 backdrop-blur-xs px-2.5 py-1 rounded-full w-max mb-2">
+                    ⭐ Evento Imperdível
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-black text-white leading-tight font-serif">
+                    3º Festival de Fatias Amiel Gâteaux
+                  </h3>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 sm:p-8 space-y-5 text-center sm:text-left">
+                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-medium">
+                  O festival de fatias de bolo mais aguardado de Nepomuceno está de volta! Preparamos fatias irresistíveis com receitas exclusivas e os melhores ingredientes para adoçar sua semana de um jeito inesquecível.
+                </p>
+
+                {/* Sabor categories prices info */}
+                <div className="grid grid-cols-2 gap-3.5 pt-1">
+                  <div className="bg-amber-50/60 rounded-2xl p-3.5 border border-amber-100/50 text-center">
+                    <span className="text-xs font-extrabold text-amber-800 uppercase tracking-wider block">🍰 Especiais</span>
+                    <span className="text-xl font-serif font-black text-amber-900 block mt-1">R$ 10,00</span>
+                    <span className="text-[10px] text-stone-500 font-medium block mt-0.5">Fatia individual</span>
+                  </div>
+                  <div className="bg-amber-50/60 rounded-2xl p-3.5 border border-amber-100/50 text-center">
+                    <span className="text-xs font-extrabold text-amber-800 uppercase tracking-wider block">👑 Premium</span>
+                    <span className="text-xl font-serif font-black text-amber-900 block mt-1">R$ 15,00</span>
+                    <span className="text-[10px] text-stone-500 font-medium block mt-0.5">Fatia individual</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setActiveCategory('festival');
+                      setIsFestivalAnnouncementOpen(false);
+                    }}
+                    className="flex-1 bg-amber-700 hover:bg-amber-800 text-white py-3.5 rounded-2xl font-bold text-xs sm:text-sm shadow-md shadow-amber-700/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    🎉 Ver Sabores Disponíveis
+                  </button>
+                  <button
+                    onClick={() => setIsFestivalAnnouncementOpen(false)}
+                    className="bg-stone-50 hover:bg-stone-100 text-stone-600 py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm border border-stone-200 transition-all cursor-pointer"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

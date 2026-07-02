@@ -213,15 +213,15 @@ export default function App() {
               await dbSaveProduct(product);
             }
           }
-
-          // Fetch hidden categories from Supabase
-          const dbHiddenCats = await dbFetchHiddenCategories();
-          if (dbHiddenCats !== null) {
-            setHiddenCategories(dbHiddenCats);
-            localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(dbHiddenCats));
-          }
         } else {
           console.warn('⚠️ Falha ao buscar dados do Supabase. Usando LocalStorage como backup temporário.');
+        }
+
+        // Fetch hidden categories from Supabase (Always execute independently)
+        const dbHiddenCats = await dbFetchHiddenCategories();
+        if (dbHiddenCats !== null) {
+          setHiddenCategories(dbHiddenCats);
+          localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(dbHiddenCats));
         }
       }
 
@@ -1080,6 +1080,7 @@ export default function App() {
                 </p>
                 <div className="flex flex-wrap gap-2.5 pt-1">
                   {[
+                    { id: 'festival', label: '⭐ Festival de Fatias' },
                     { id: 'doces', label: '🍰 Tortas Doces' },
                     { id: 'salgadas', label: '🥧 Tortas Salgadas' },
                     { id: 'salgados', label: '🥪 Salgados' },

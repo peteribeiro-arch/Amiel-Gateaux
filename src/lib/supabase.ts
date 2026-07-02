@@ -167,7 +167,7 @@ export async function dbDeleteProduct(id: string): Promise<boolean> {
  * Fetch list of hidden categories
  */
 export async function dbFetchHiddenCategories(): Promise<Category[] | null> {
-  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return null;
+  if (!isSupabaseConfigured || !supabase) return null;
 
   try {
     const { data, error } = await supabase
@@ -199,7 +199,7 @@ export async function dbFetchHiddenCategories(): Promise<Category[] | null> {
  * Save hidden categories to Supabase settings
  */
 export async function dbSaveHiddenCategories(categories: Category[]): Promise<boolean> {
-  if (!isSupabaseConfigured || !supabase || hasSupabaseSchemaError) return false;
+  if (!isSupabaseConfigured || !supabase) return false;
 
   try {
     const { error } = await supabase

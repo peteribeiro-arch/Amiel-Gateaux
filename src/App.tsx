@@ -46,7 +46,17 @@ export default function App() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [hiddenCategories, setHiddenCategories] = useState<Category[]>([]);
+  const [hiddenCategories, setHiddenCategories] = useState<Category[]>(() => {
+    const saved = localStorage.getItem('bella_massa_hidden_categories');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
   const [supabaseSchemaError, setSupabaseSchemaError] = useState(false);
   const [supabaseErrorMessage, setSupabaseErrorMessage] = useState<string | null>(null);
   const [hasInitializedDefaultCategory, setHasInitializedDefaultCategory] = useState(false);

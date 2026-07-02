@@ -347,7 +347,11 @@ export function CartSidebar({
                             className="flex flex-col gap-2 bg-bento-bg/50 p-3.5 rounded-2xl border border-bento-border/60"
                           >
                             <div className="flex gap-3">
-                              {item.product.category === 'potes' ? (
+                              {item.product.category === 'festival' ? (
+                                <div className="w-14 h-14 rounded-xl bg-rose-500/10 text-[#C95B72] flex items-center justify-center text-2xl flex-shrink-0 border border-rose-200/50 select-none">
+                                  🍰
+                                </div>
+                              ) : item.product.category === 'potes' ? (
                                 <div className="w-14 h-14 rounded-xl bg-bento-amber/10 text-bento-amber-dark flex items-center justify-center text-2xl flex-shrink-0 border border-bento-amber/20 select-none">
                                   🫙
                                 </div>

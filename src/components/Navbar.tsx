@@ -194,16 +194,18 @@ export function Navbar({
 
         {/* Category Navigation Bar */}
         <div className="flex items-center overflow-x-auto py-3 gap-1.5 scrollbar-none border-t border-bento-border">
-          <button
-            onClick={() => setActiveCategory('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
-              activeCategory === 'all'
-                ? 'bg-bento-dark text-white'
-                : 'bg-white text-bento-dark/70 hover:bg-stone-50 border border-bento-border'
-            }`}
-          >
-            📋 Todos os Sabores
-          </button>
+          {(!isAdminMode && CATEGORIES_LIST.filter(cat => !hiddenCategories.includes(cat.id)).length <= 1) ? null : (
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                activeCategory === 'all'
+                  ? 'bg-bento-dark text-white'
+                  : 'bg-white text-bento-dark/70 hover:bg-stone-50 border border-bento-border'
+              }`}
+            >
+              📋 Todos os Sabores
+            </button>
+          )}
 
           {CATEGORIES_LIST.map((cat) => {
             const isHidden = hiddenCategories.includes(cat.id);

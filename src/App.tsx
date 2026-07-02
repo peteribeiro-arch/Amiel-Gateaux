@@ -228,7 +228,19 @@ export default function App() {
         }
 
         // Fetch hidden categories from Supabase (Always execute independently)
-        const dbHiddenCats = await dbFetchHiddenCategories();
+        let dbHiddenCats = await dbFetchHiddenCategories();
+        
+        // Force-hide all pages except Festival de Fatias on first load to apply the manager's request
+        const forcedFlag = 'bella_massa_forced_festival_only_v4';
+        if (!localStorage.getItem(forcedFlag)) {
+          const onlyFestivalHidden: Category[] = ['doces', 'salgadas', 'bolos', 'aniversario', 'potes', 'salgados'];
+          if (isSupabaseConfigured) {
+            await dbSaveHiddenCategories(onlyFestivalHidden);
+          }
+          dbHiddenCats = onlyFestivalHidden;
+          localStorage.setItem(forcedFlag, 'true');
+        }
+
         if (dbHiddenCats !== null) {
           setHiddenCategories(dbHiddenCats);
           localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(dbHiddenCats));
@@ -472,10 +484,20 @@ export default function App() {
     }
   };
 
-  // Redirect to 'all' if the user is not admin and is currently looking at a hidden category
+  // Redirect if looking at a hidden category, or looking at 'all' when everything else is hidden
   useEffect(() => {
-    if (!isAdminMode && activeCategory !== 'all' && hiddenCategories.includes(activeCategory)) {
-      setActiveCategory('all');
+    if (!isAdminMode) {
+      const isCurrentHidden = activeCategory !== 'all' && hiddenCategories.includes(activeCategory);
+      const standardCategories: Category[] = ['doces', 'salgadas', 'salgados', 'bolos', 'aniversario', 'potes'];
+      const allStandardHidden = standardCategories.every(c => hiddenCategories.includes(c));
+
+      if (isCurrentHidden || (activeCategory === 'all' && allStandardHidden)) {
+        if (!hiddenCategories.includes('festival')) {
+          setActiveCategory('festival');
+        } else {
+          setActiveCategory('all');
+        }
+      }
     }
   }, [isAdminMode, activeCategory, hiddenCategories]);
 

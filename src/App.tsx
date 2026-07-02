@@ -228,18 +228,7 @@ export default function App() {
         }
 
         // Fetch hidden categories from Supabase (Always execute independently)
-        let dbHiddenCats = await dbFetchHiddenCategories();
-        
-        // Force-hide all pages except Festival de Fatias on first load to apply the manager's request
-        const forcedFlag = 'bella_massa_forced_festival_only_v4';
-        if (!localStorage.getItem(forcedFlag)) {
-          const onlyFestivalHidden: Category[] = ['doces', 'salgadas', 'bolos', 'aniversario', 'potes', 'salgados'];
-          if (isSupabaseConfigured) {
-            await dbSaveHiddenCategories(onlyFestivalHidden);
-          }
-          dbHiddenCats = onlyFestivalHidden;
-          localStorage.setItem(forcedFlag, 'true');
-        }
+        const dbHiddenCats = await dbFetchHiddenCategories();
 
         if (dbHiddenCats !== null) {
           setHiddenCategories(dbHiddenCats);
@@ -308,6 +297,18 @@ export default function App() {
             setHiddenCategories([]);
           }
         }
+      }
+
+      // Force-hide all pages except Festival de Fatias on first load to apply the manager's request (v6_final)
+      const forcedFlag = 'bella_massa_forced_festival_only_v6_final';
+      if (!localStorage.getItem(forcedFlag)) {
+        const onlyFestivalHidden: Category[] = ['doces', 'salgadas', 'bolos', 'aniversario', 'potes', 'salgados'];
+        setHiddenCategories(onlyFestivalHidden);
+        localStorage.setItem('bella_massa_hidden_categories', JSON.stringify(onlyFestivalHidden));
+        if (isSupabaseConfigured) {
+          await dbSaveHiddenCategories(onlyFestivalHidden);
+        }
+        localStorage.setItem(forcedFlag, 'true');
       }
     }
 
